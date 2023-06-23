@@ -21,17 +21,17 @@ export function fetchEmailCode(userEmail: string) {
 
 /**
  * 登录(登录接口)
- * @param UserAccount - 用户名
- * @param UserPassword - 密码
+ * @param userAccount - 用户名
+ * @param userPassword - 密码
  */
-export function fetchLogin(UserAccount: string, UserPassword: string) {
-  return request.post<ApiAuth.Token>('/api/v1/Login/Login', { UserAccount, UserPassword });
+export function fetchLogin(userAccount: string, userPassword: string) {
+  return request.post<ApiAuth.Token>('/api/v1/Login/Login', { userAccount, userPassword });
   // return mockRequest.post<ApiAuth.Token>('/login', { userName, password });
 }
 
 /** 获取用户信息 */
 export function fetchUserInfo() {
-  return request.get<ApiAuth.UserInfo>('/api/v1/Login/GetUserInfo');
+  return request.get<ApiAuth.UserInfo>('/api/v1/User/GetUser');
 }
 
 /**

@@ -69,3 +69,81 @@ export function adapterOfFetchMenuTree(data: ApiUserManagement.Menu[] | null): T
     return role;
   });
 }
+
+/**
+ * 敏感词
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchSensitiveList(data: ApiGptManagement.Sensitive[] | null): GptManagement.Sensitive[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: GptManagement.Sensitive = {
+      index: index + 1,
+      key: item.sensitiveId,
+      ...item
+    };
+
+    return role;
+  });
+}
+
+/**
+ * 聊天记录
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchChatList(data: ApiGptManagement.Chat[] | null): GptManagement.Chat[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: GptManagement.Chat = {
+      index: index + 1,
+      key: item.chatRecordId,
+      ...item
+    };
+
+    return role;
+  });
+}
+
+/**
+ * key池 管理
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchKeyOptionList(data: ApiGptManagement.KeyOption[] | null): GptManagement.KeyOption[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: GptManagement.KeyOption = {
+      index: index + 1,
+      key: item.keyId,
+      ...item
+    };
+
+    return role;
+  });
+}
+
+/**
+ * 系统提示词
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchPromptOptionList(
+  data: ApiGptManagement.PromptOption[] | null
+): GptManagement.PromptOption[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: GptManagement.PromptOption = {
+      index: index + 1,
+      key: item.promptId,
+      ...item
+    };
+
+    return role;
+  });
+}
