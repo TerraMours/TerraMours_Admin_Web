@@ -104,6 +104,12 @@ declare namespace ApiUserManagement {
 }
 
 declare namespace ApiGptManagement {
+  interface PageData<T> {
+    items: T[];
+    total: number | undefined;
+    page: number | undefined;
+    pageSize: number | undefined;
+  }
   //* *敏感词 */
   interface Sensitive {
     sensitiveId: number;

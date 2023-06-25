@@ -129,11 +129,11 @@ export function fetchAddRole(roleName:string | null){
 
   /**
  * 删除菜单
- * @param roleId 
+ * @param menuId 
  * @returns 
  */
-  export function fetchDelMenu(roleId: number){
-    return request.post<boolean>('api/v1/Menu/DelMenu',{roleId});
+  export function fetchDelMenu(menuId: number){
+    return request.post<boolean>('api/v1/Menu/DelMenu',{menuId});
   }
   /**
    * 更新菜单信息

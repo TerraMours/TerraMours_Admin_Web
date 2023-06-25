@@ -109,6 +109,33 @@ export function adapterOfFetchChatList(data: ApiGptManagement.Chat[] | null): Gp
 }
 
 /**
+ * 聊天记录
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchPageChatList(
+  data: ApiGptManagement.PageData<ApiGptManagement.Chat> | null
+): ApiGptManagement.PageData<GptManagement.Chat> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
+    const role: GptManagement.Chat = {
+      index: index + 1,
+      key: item.chatRecordId,
+      ...item
+    };
+
+    return role;
+  });
+  const PageData: ApiGptManagement.PageData<GptManagement.Chat> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: undefined
+  };
+  return PageData;
+}
+
+/**
  * key池 管理
  * @param data
  * @returns
