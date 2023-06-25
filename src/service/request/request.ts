@@ -3,6 +3,7 @@ import type { Ref } from 'vue';
 import type { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { useBoolean, useLoading } from '@/hooks';
 import CustomAxiosInstance from './instance';
+import qs from 'qs';
 
 type RequestMethod = 'get' | 'post' | 'put' | 'delete';
 
@@ -44,15 +45,35 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: S
     return res;
   }
 
-  /**
-   * get请求
-   * @param url - 请求地址
-   * @param config - axios配置
-   */
-  function get<T>(url: string, config?: AxiosRequestConfig) {
+ /**
+  * get请求
+  * @param url 
+  * @param data 
+  * @param config 
+  * @returns 
+  */
+  function get<T>(url: string,data?: any, config?: AxiosRequestConfig) {
+    url=mergeUrlAndParams(url,data);
     return asyncRequest<T>({ url, method: 'get', axiosConfig: config });
   }
 
+/**
+ * 拼接url
+ * @param url 
+ * @param data 
+ * @returns 
+ */
+function mergeUrlAndParams(url: string, data: any): string {
+  const queryString = qs.stringify(data);
+  if (!queryString) {
+    return url;
+  }
+
+  const separator = url.indexOf('?') === -1 ? '?' : '&';
+  return url + separator + queryString;
+}
+
+  
   /**
    * post请求
    * @param url - 请求地址

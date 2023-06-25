@@ -190,7 +190,28 @@ export function fetchAddRole(roleName:string | null){
   return request.post<ApiCommon.KeyValue[]>('api/v1/Menu/GetRoleSelect');
 }
 
-
-
-
-
+/**
+ * 新增敏感词
+ * @param word 
+ * @returns 
+ */
+export function fetchAddSensitive(word: string | null){
+  return request.get<boolean>('/api/v1/Chat/AddSensitive',{word});
+}
+/**
+ * 修改敏感词
+ * @param sensitiveId 
+ * @param word 
+ * @returns 
+ */
+export function fetchChangeSensitive(sensitiveId:number,word: string | null){
+  return request.get<boolean>('/api/v1/Chat/ChangeSensitive',{sensitiveId,word});
+}
+/**
+ * 删除
+ * @param sensitiveId 
+ * @returns 
+ */
+export function fetchDeleteSensitive(sensitiveId:number){
+  return request.get<boolean>('/api/v1/Chat/DeleteSensitive',{sensitiveId});
+}

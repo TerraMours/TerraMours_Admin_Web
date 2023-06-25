@@ -75,10 +75,11 @@ export function adapterOfFetchMenuTree(data: ApiUserManagement.Menu[] | null): T
  * @param data
  * @returns
  */
-export function adapterOfFetchSensitiveList(data: ApiGptManagement.Sensitive[] | null): GptManagement.Sensitive[] {
-  if (!data) return [];
-
-  return data.map((item, index) => {
+export function adapterOfFetchPageSensitiveList(
+  data: ApiGptManagement.PageData<ApiGptManagement.Sensitive> | null
+): ApiGptManagement.PageData<GptManagement.Sensitive> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
     const role: GptManagement.Sensitive = {
       index: index + 1,
       key: item.sensitiveId,
@@ -87,25 +88,13 @@ export function adapterOfFetchSensitiveList(data: ApiGptManagement.Sensitive[] |
 
     return role;
   });
-}
-
-/**
- * 聊天记录
- * @param data
- * @returns
- */
-export function adapterOfFetchChatList(data: ApiGptManagement.Chat[] | null): GptManagement.Chat[] {
-  if (!data) return [];
-
-  return data.map((item, index) => {
-    const role: GptManagement.Chat = {
-      index: index + 1,
-      key: item.chatRecordId,
-      ...item
-    };
-
-    return role;
-  });
+  const PageData: ApiGptManagement.PageData<GptManagement.Sensitive> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: undefined
+  };
+  return PageData;
 }
 
 /**

@@ -33,6 +33,7 @@ export const views: Record<
   management_chat: () => import('./management/chat/index.vue'),
   management_role: () => import('./management/role/index.vue'),
   management_route: () => import('./management/route/index.vue'),
+  management_sensitive: () => import('./management/sensitive/index.vue'),
   management_user: () => import('./management/user/index.vue'),
   'multi-menu_first_second-new_third': () => import('./multi-menu/first/second-new/third/index.vue'),
   'multi-menu_first_second': () => import('./multi-menu/first/second/index.vue'),

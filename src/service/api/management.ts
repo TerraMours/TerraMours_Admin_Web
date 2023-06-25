@@ -5,7 +5,7 @@ import {
   adapterOfFetchRoleList,
   adapterOfFetchMenuList,
   adapterOfFetchMenuTree,
-  adapterOfFetchSensitiveList,
+  adapterOfFetchPageSensitiveList,
   adapterOfFetchPageChatList,
   adapterOfFetchKeyOptionList,
   adapterOfFetchPromptOptionList
@@ -41,12 +41,15 @@ export const fetchSensitiveList = async (
   pageIndex: number | undefined,
   pageSize: number | undefined
 ) => {
-  const data = await request.post<ApiGptManagement.Sensitive[] | null>('/api/v1/Chat/SensitiveList', {
-    queryString,
-    pageIndex,
-    pageSize
-  });
-  return adapter(adapterOfFetchSensitiveList, data);
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.Sensitive> | null>(
+    '/api/v1/Chat/SensitiveList',
+    {
+      queryString,
+      pageIndex,
+      pageSize
+    }
+  );
+  return adapter(adapterOfFetchPageSensitiveList, data);
 };
 
 /** 获取聊天记录列表 */
