@@ -31,6 +31,8 @@ export const views: Record<
   function_tab: () => import('./function/tab/index.vue'),
   management_auth: () => import('./management/auth/index.vue'),
   management_chat: () => import('./management/chat/index.vue'),
+  management_keyOption: () => import('./management/keyOption/index.vue'),
+  management_promptOption: () => import('./management/promptOption/index.vue'),
   management_role: () => import('./management/role/index.vue'),
   management_route: () => import('./management/route/index.vue'),
   management_sensitive: () => import('./management/sensitive/index.vue'),

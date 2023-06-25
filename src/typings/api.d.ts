@@ -132,7 +132,7 @@ declare namespace ApiGptManagement {
     used: number | null;
     unUsed: number | null;
     total: number | null;
-    createDate: Date;
+    createDate: Date | null;
   }
   /** 系统提示词 */
   interface PromptOption {
@@ -140,6 +140,6 @@ declare namespace ApiGptManagement {
     act: string | null;
     prompt: string | null;
     usedCount: number | null;
-    createDate: Date;
+    createDate: Date | null;
   }
 }

@@ -7,8 +7,8 @@ import {
   adapterOfFetchMenuTree,
   adapterOfFetchPageSensitiveList,
   adapterOfFetchPageChatList,
-  adapterOfFetchKeyOptionList,
-  adapterOfFetchPromptOptionList
+  adapterOfFetchPageKeyOptionList,
+  adapterOfFetchPagePromptOptionList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -71,12 +71,15 @@ export const fetchKeyOptionList = async (
   pageIndex: number | undefined,
   pageSize: number | undefined
 ) => {
-  const data = await request.post<ApiGptManagement.KeyOption[] | null>('/api/v1/Chat/KeyOptionsList', {
-    queryString,
-    pageIndex,
-    pageSize
-  });
-  return adapter(adapterOfFetchKeyOptionList, data);
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.KeyOption> | null>(
+    '/api/v1/Chat/KeyOptionsList',
+    {
+      queryString,
+      pageIndex,
+      pageSize
+    }
+  );
+  return adapter(adapterOfFetchPageKeyOptionList, data);
 };
 
 /** 获取系统提示词列表 */
@@ -85,10 +88,13 @@ export const fetchPromptOptionList = async (
   pageIndex: number | undefined,
   pageSize: number | undefined
 ) => {
-  const data = await request.post<ApiGptManagement.PromptOption[] | null>('/api/v1/Chat/PromptOptionList', {
-    queryString,
-    pageIndex,
-    pageSize
-  });
-  return adapter(adapterOfFetchPromptOptionList, data);
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.PromptOption> | null>(
+    '/api/v1/Chat/PromptOptionList',
+    {
+      queryString,
+      pageIndex,
+      pageSize
+    }
+  );
+  return adapter(adapterOfFetchPagePromptOptionList, data);
 };

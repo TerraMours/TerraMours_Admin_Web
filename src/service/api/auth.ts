@@ -208,10 +208,64 @@ export function fetchChangeSensitive(sensitiveId:number,word: string | null){
   return request.get<boolean>('/api/v1/Chat/ChangeSensitive',{sensitiveId,word});
 }
 /**
- * 删除
+ * 删除敏感词
  * @param sensitiveId 
  * @returns 
  */
 export function fetchDeleteSensitive(sensitiveId:number){
   return request.get<boolean>('/api/v1/Chat/DeleteSensitive',{sensitiveId});
+}
+
+/**
+ * 新增key池
+ * @param apiKey 
+ * @returns 
+ */
+export function fetchAddKeyOptions(apiKey: string | null){
+  return request.get<boolean>('/api/v1/Chat/AddKeyOptions',{apiKey});
+}
+/**
+ * 修改key池
+ * @param keyId 
+ * @param apiKey 
+ * @returns 
+ */
+export function fetchChangeKeyOptions(keyId:number,apiKey: string | null){
+  return request.get<boolean>('/api/v1/Chat/ChangeKeyOptions',{keyId,apiKey});
+}
+/**
+ * 删除key池
+ * @param keyId 
+ * @returns 
+ */
+export function fetchDeleteKeyOptions(keyId:number){
+  return request.get<boolean>('/api/v1/Chat/DeleteKeyOptions',{keyId});
+}
+
+/**
+ * 新增系统提示词
+ * @param act 扮演角色
+ * @param Prompt 提示词
+ * @returns 
+ */
+export function fetchAddPromptOption(act: string | null,Prompt: string | null){
+  return request.post<boolean>('/api/v1/Chat/AddPromptOption',{act,Prompt});
+}
+/**
+ * 修改系统提示词
+ * @param promptId 
+ * @param act 扮演角色
+ * @param Prompt 提示词
+ * @returns 
+ */
+export function fetchChangePromptOption(promptId:number,act: string | null,Prompt: string | null){
+  return request.post<boolean>('/api/v1/Chat/ChangePromptOption',{promptId,act,Prompt});
+}
+/**
+ * 删除系统提示词
+ * @param promptId 
+ * @returns 
+ */
+export function fetchDeletePromptOption(promptId:number){
+  return request.get<boolean>('/api/v1/Chat/DeletePromptOption',{promptId});
 }

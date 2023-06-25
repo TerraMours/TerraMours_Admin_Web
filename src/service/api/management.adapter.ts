@@ -129,10 +129,11 @@ export function adapterOfFetchPageChatList(
  * @param data
  * @returns
  */
-export function adapterOfFetchKeyOptionList(data: ApiGptManagement.KeyOption[] | null): GptManagement.KeyOption[] {
-  if (!data) return [];
-
-  return data.map((item, index) => {
+export function adapterOfFetchPageKeyOptionList(
+  data: ApiGptManagement.PageData<ApiGptManagement.KeyOption> | null
+): ApiGptManagement.PageData<GptManagement.KeyOption> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
     const role: GptManagement.KeyOption = {
       index: index + 1,
       key: item.keyId,
@@ -141,6 +142,13 @@ export function adapterOfFetchKeyOptionList(data: ApiGptManagement.KeyOption[] |
 
     return role;
   });
+  const PageData: ApiGptManagement.PageData<GptManagement.KeyOption> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: undefined
+  };
+  return PageData;
 }
 
 /**
@@ -148,12 +156,11 @@ export function adapterOfFetchKeyOptionList(data: ApiGptManagement.KeyOption[] |
  * @param data
  * @returns
  */
-export function adapterOfFetchPromptOptionList(
-  data: ApiGptManagement.PromptOption[] | null
-): GptManagement.PromptOption[] {
-  if (!data) return [];
-
-  return data.map((item, index) => {
+export function adapterOfFetchPagePromptOptionList(
+  data: ApiGptManagement.PageData<ApiGptManagement.PromptOption> | null
+): ApiGptManagement.PageData<GptManagement.PromptOption> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
     const role: GptManagement.PromptOption = {
       index: index + 1,
       key: item.promptId,
@@ -162,4 +169,11 @@ export function adapterOfFetchPromptOptionList(
 
     return role;
   });
+  const PageData: ApiGptManagement.PageData<GptManagement.PromptOption> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: undefined
+  };
+  return PageData;
 }
