@@ -17,6 +17,12 @@
 - **Themes**: Rich configurable themes and dark mode, dynamically changing theme colors based on the atomic CSS framework - UnoCss
 - **Code Standards**: Rich standard plugins and high code standards
 
+## Developed Features
+- **Chat Records**: Manage chat records and query user session information. (Todo: 1. Export function 2. Create fine-tuning model).
+- **Sensitive Word Management**: Manage sensitive words, customize sensitive word filtering, and enhance system security.
+- **Key Pool Management**: Manage key pools, support administrators to add multiple keys to form a key pool, and perform polling when calling AI interfaces to enhance system stability.
+- **System Prompts**: Add various role prompts to help users better use AI for conversations.
+
 ## Online Preview
 
 - [TerraMours Admin Preview](https://demo.terramours.site/)
@@ -107,7 +113,12 @@ Supports modern browsers, not Internet Explorer
 
 If you find this project helpful, you can buy a drink for the TerraMours team to show your support. The motivation for TerraMours to be open-sourced comes from everyone's support and encouragement.
 
-![Donation](https://www.raokun.top/upload/2023/04/%E5%BE%AE%E4%BF%A1%E6%94%B6%E6%AC%BE.jpg)
+  <div style="display:flex;">
+  	<div style="padding-right:24px;">
+  		<p>WeChat</p>
+      <img src="https://www.raokun.top/upload/2023/04/%E5%BE%AE%E4%BF%A1%E6%94%B6%E6%AC%BE.jpg" style="width:200px" />
+  	</div>
+  </div>
 
 ## License
 

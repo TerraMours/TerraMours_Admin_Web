@@ -63,3 +63,31 @@ declare namespace UserManagement {
    */
   type EnableLoginKey = NonNullable<User['enableLogin']>;
 }
+
+declare namespace GptManagement {
+  interface Sensitive extends ApiGptManagement.Sensitive {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+
+  interface Chat extends ApiGptManagement.Chat {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+  interface KeyOption extends ApiGptManagement.KeyOption {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+  interface PromptOption extends ApiGptManagement.PromptOption {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+}

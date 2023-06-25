@@ -17,6 +17,13 @@
 - **主题**：丰富可配置的主题、暗黑模式，基于原子 css 框架 - UnoCss 的动态主题颜色
 - **代码规范**：丰富的规范插件及极高的代码规范
 
+## 已开发功能
+- **聊天记录**：聊天记录管理，查询使用者会话信息。（todo：1.导出功能2.创建微调模型）
+- **敏感词管理**: 敏感词管理，自定义敏感词过滤，加强系统安全
+- **Key池管理**：Key池管理，支持管理者添加多个key组成Key池，调用ai接口时轮询，加强稳定性
+- **系统提示词**：系统提示词，添加各种角色提示词，让使用者能更好的使用ai对话。
+
+
 ## 在线预览
 
 - [TerraMours Admin 预览地址](https://demo.terramours.site/)
@@ -110,9 +117,14 @@ docker run --name terramoursweb -p 80:80 -d terramoursweb/terramoursweb:v0.9.6
 
 ## 捐赠
 
-如果你觉得这个项目对你有帮助，可以请 TerraMours 组员喝杯饮料表示支持，TerraMours 开源的动力离不开各位的支持和鼓励。
+如果你觉得这个项目对你有帮助，可以请 TerraMours 组员喝杯咖啡表示支持，TerraMours 开源的动力离不开各位的支持和鼓励。
 
-![赞助](https://www.raokun.top/upload/2023/04/%E5%BE%AE%E4%BF%A1%E6%94%B6%E6%AC%BE.jpg)
+  <div style="display:flex;">
+  	<div style="padding-right:24px;">
+  		<p>微信</p>
+      <img src="https://www.raokun.top/upload/2023/04/%E5%BE%AE%E4%BF%A1%E6%94%B6%E6%AC%BE.jpg" style="width:200px" />
+  	</div>
+  </div>
 
 ## License
 

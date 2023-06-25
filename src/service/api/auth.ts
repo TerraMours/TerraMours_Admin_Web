@@ -21,17 +21,17 @@ export function fetchEmailCode(userEmail: string) {
 
 /**
  * 登录(登录接口)
- * @param UserAccount - 用户名
- * @param UserPassword - 密码
+ * @param userAccount - 用户名
+ * @param userPassword - 密码
  */
-export function fetchLogin(UserAccount: string, UserPassword: string) {
-  return request.post<ApiAuth.Token>('/api/v1/Login/Login', { UserAccount, UserPassword });
+export function fetchLogin(userAccount: string, userPassword: string) {
+  return request.post<ApiAuth.Token>('/api/v1/Login/Login', { userAccount, userPassword });
   // return mockRequest.post<ApiAuth.Token>('/login', { userName, password });
 }
 
 /** 获取用户信息 */
 export function fetchUserInfo() {
-  return request.get<ApiAuth.UserInfo>('/api/v1/Login/GetUserInfo');
+  return request.get<ApiAuth.UserInfo>('/api/v1/User/GetUser');
 }
 
 /**
@@ -129,11 +129,11 @@ export function fetchAddRole(roleName:string | null){
 
   /**
  * 删除菜单
- * @param roleId 
+ * @param menuId 
  * @returns 
  */
-  export function fetchDelMenu(roleId: number){
-    return request.post<boolean>('api/v1/Menu/DelMenu',{roleId});
+  export function fetchDelMenu(menuId: number){
+    return request.post<boolean>('api/v1/Menu/DelMenu',{menuId});
   }
   /**
    * 更新菜单信息
@@ -190,7 +190,82 @@ export function fetchAddRole(roleName:string | null){
   return request.post<ApiCommon.KeyValue[]>('api/v1/Menu/GetRoleSelect');
 }
 
+/**
+ * 新增敏感词
+ * @param word 
+ * @returns 
+ */
+export function fetchAddSensitive(word: string | null){
+  return request.get<boolean>('/api/v1/Chat/AddSensitive',{word});
+}
+/**
+ * 修改敏感词
+ * @param sensitiveId 
+ * @param word 
+ * @returns 
+ */
+export function fetchChangeSensitive(sensitiveId:number,word: string | null){
+  return request.get<boolean>('/api/v1/Chat/ChangeSensitive',{sensitiveId,word});
+}
+/**
+ * 删除敏感词
+ * @param sensitiveId 
+ * @returns 
+ */
+export function fetchDeleteSensitive(sensitiveId:number){
+  return request.get<boolean>('/api/v1/Chat/DeleteSensitive',{sensitiveId});
+}
 
+/**
+ * 新增key池
+ * @param apiKey 
+ * @returns 
+ */
+export function fetchAddKeyOptions(apiKey: string | null){
+  return request.get<boolean>('/api/v1/Chat/AddKeyOptions',{apiKey});
+}
+/**
+ * 修改key池
+ * @param keyId 
+ * @param apiKey 
+ * @returns 
+ */
+export function fetchChangeKeyOptions(keyId:number,apiKey: string | null){
+  return request.get<boolean>('/api/v1/Chat/ChangeKeyOptions',{keyId,apiKey});
+}
+/**
+ * 删除key池
+ * @param keyId 
+ * @returns 
+ */
+export function fetchDeleteKeyOptions(keyId:number){
+  return request.get<boolean>('/api/v1/Chat/DeleteKeyOptions',{keyId});
+}
 
-
-
+/**
+ * 新增系统提示词
+ * @param act 扮演角色
+ * @param Prompt 提示词
+ * @returns 
+ */
+export function fetchAddPromptOption(act: string | null,Prompt: string | null){
+  return request.post<boolean>('/api/v1/Chat/AddPromptOption',{act,Prompt});
+}
+/**
+ * 修改系统提示词
+ * @param promptId 
+ * @param act 扮演角色
+ * @param Prompt 提示词
+ * @returns 
+ */
+export function fetchChangePromptOption(promptId:number,act: string | null,Prompt: string | null){
+  return request.post<boolean>('/api/v1/Chat/ChangePromptOption',{promptId,act,Prompt});
+}
+/**
+ * 删除系统提示词
+ * @param promptId 
+ * @returns 
+ */
+export function fetchDeletePromptOption(promptId:number){
+  return request.get<boolean>('/api/v1/Chat/DeletePromptOption',{promptId});
+}

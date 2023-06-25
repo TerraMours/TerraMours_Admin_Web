@@ -102,3 +102,44 @@ declare namespace ApiUserManagement {
     isChecked: boolean | null;
   }
 }
+
+declare namespace ApiGptManagement {
+  interface PageData<T> {
+    items: T[];
+    total: number | undefined;
+    page: number | undefined;
+    pageSize: number | undefined;
+  }
+  //* *敏感词 */
+  interface Sensitive {
+    sensitiveId: number;
+    word: string;
+  }
+  /** 聊天记录 */
+  interface Chat {
+    chatRecordId: number;
+    conversationId: number;
+    role: string;
+    message: string;
+    userId: number;
+    createDate: Date;
+  }
+  /** key池 管理 */
+  interface KeyOption {
+    keyId: number;
+    apiKey: string;
+    expirationTime: Date | null;
+    used: number | null;
+    unUsed: number | null;
+    total: number | null;
+    createDate: Date | null;
+  }
+  /** 系统提示词 */
+  interface PromptOption {
+    promptId: number;
+    act: string | null;
+    prompt: string | null;
+    usedCount: number | null;
+    createDate: Date | null;
+  }
+}
