@@ -22,7 +22,7 @@ import { fetchChatList } from '@/service';
 import { useLoading } from '@/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
-const queryString = ref('');
+const queryString = ref(null);
 const tableData = ref<GptManagement.Chat[]>([]);
 function setTableData(data: GptManagement.Chat[]) {
   tableData.value = data;
