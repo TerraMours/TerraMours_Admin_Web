@@ -177,3 +177,41 @@ export function adapterOfFetchPagePromptOptionList(
   };
   return PageData;
 }
+
+/**
+ * 商品分类
+ * @param data
+ * @returns
+ */
+export function adapterAllCategoryList(data: ApiPayManagement.Category[] | null): PayManagement.Category[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: PayManagement.Category = {
+      index: index + 1,
+      key: item.id,
+      ...item
+    };
+
+    return role;
+  });
+}
+
+/**
+ * 商品
+ * @param data
+ * @returns
+ */
+export function adapterAllProductList(data: ApiPayManagement.Product[] | null): PayManagement.Product[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const role: PayManagement.Product = {
+      index: index + 1,
+      key: item.id,
+      ...item
+    };
+
+    return role;
+  });
+}

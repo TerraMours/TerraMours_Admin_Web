@@ -34,16 +34,15 @@ import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { fetchKeyOptionList, fetchDeleteKeyOptions } from '@/service';
+import { fetchAllCategoryList, DeleteCategory } from '@/service';
 import { useBoolean, useLoading } from '@/hooks';
 import TableActionModal from './components/table-action-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
-const tableData = ref<GptManagement.KeyOption[]>([]);
-const queryString = ref('');
-function setTableData(data: GptManagement.KeyOption[]) {
+const tableData = ref<PayManagement.Category[]>([]);
+function setTableData(data: PayManagement.Category[]) {
   tableData.value = data;
 }
 const pagination: PaginationProps = reactive({
@@ -61,23 +60,18 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
-function getQueryString() {
-  return queryString.value;
-}
 async function getTableData() {
   startLoading();
-  const { data } = await fetchKeyOptionList(getQueryString(), pagination.page, pagination.pageSize);
+  const { data } = await fetchAllCategoryList();
   if (data) {
     setTimeout(() => {
-      setTableData(data.items);
-      pagination.itemCount = data.total;
-      pagination.pageCount = data.page;
+      setTableData(data);
       endLoading();
     }, 1000);
   }
 }
 
-const columns: Ref<DataTableColumns<GptManagement.KeyOption>> = ref([
+const columns: Ref<DataTableColumns<PayManagement.Category>> = ref([
   {
     type: 'selection',
     align: 'center'
@@ -88,33 +82,13 @@ const columns: Ref<DataTableColumns<GptManagement.KeyOption>> = ref([
     align: 'center'
   },
   {
-    key: 'apiKey',
-    title: 'Key',
+    key: 'name',
+    title: '分类名称',
     align: 'center'
   },
   {
-    key: 'expirationTime',
-    title: '过期时间',
-    align: 'center'
-  },
-  {
-    key: 'used',
-    title: '使用量',
-    align: 'center'
-  },
-  {
-    key: 'unUsed',
-    title: '余额',
-    align: 'center'
-  },
-  {
-    key: 'total',
-    title: '总量',
-    align: 'center'
-  },
-  {
-    key: 'createDate',
-    title: '创建时间',
+    key: 'description',
+    title: '分类描述',
     align: 'center'
   },
   {
@@ -124,10 +98,10 @@ const columns: Ref<DataTableColumns<GptManagement.KeyOption>> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton size={'small'} onClick={() => handleEditTable(row.keyId)}>
+          <NButton size={'small'} onClick={() => handleEditTable(row.id)}>
             编辑
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.keyId)}>
+          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
               default: () => '确认删除',
               trigger: () => <NButton size={'small'}>删除</NButton>
@@ -137,7 +111,7 @@ const columns: Ref<DataTableColumns<GptManagement.KeyOption>> = ref([
       );
     }
   }
-]) as Ref<DataTableColumns<GptManagement.KeyOption>>;
+]) as Ref<DataTableColumns<PayManagement.Category>>;
 
 const modalType = ref<ModalType>('add');
 
@@ -145,9 +119,9 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<GptManagement.KeyOption | null>(null);
+const editData = ref<PayManagement.Category | null>(null);
 
-function setEditData(data: GptManagement.KeyOption | null) {
+function setEditData(data: PayManagement.Category | null) {
   editData.value = data;
 }
 
@@ -157,8 +131,10 @@ function handleAddTable() {
 }
 
 function handleEditTable(rowId: number) {
-  const findItem = tableData.value.find(item => item.keyId === rowId);
+  console.log(rowId);
+  const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
+    console.log(findItem);
     setEditData(findItem);
   }
   setModalType('edit');
@@ -166,10 +142,11 @@ function handleEditTable(rowId: number) {
 }
 
 async function handleDeleteTable(rowId: number) {
-  const { data } = await fetchDeleteKeyOptions(rowId);
+  console.log(rowId);
+  const { data } = await DeleteCategory(rowId);
   if (data) {
     window.$message?.success('删除成功!');
-    const idx = tableData.value.findIndex(item => item.keyId === rowId);
+    const idx = tableData.value.findIndex(item => item.id === rowId);
     if (idx > -1) {
       tableData.value.splice(idx, 1);
     }

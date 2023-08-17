@@ -8,7 +8,9 @@ import {
   adapterOfFetchPageSensitiveList,
   adapterOfFetchPageChatList,
   adapterOfFetchPageKeyOptionList,
-  adapterOfFetchPagePromptOptionList
+  adapterOfFetchPagePromptOptionList,
+  adapterAllCategoryList,
+  adapterAllProductList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -97,4 +99,16 @@ export const fetchPromptOptionList = async (
     }
   );
   return adapter(adapterOfFetchPagePromptOptionList, data);
+};
+
+/** 查询所有商品分类信息 */
+export const fetchAllCategoryList = async () => {
+  const data = await request.get<ApiPayManagement.Category[] | null>('/api/v1/Category/GetAllCategoryList');
+  return adapter(adapterAllCategoryList, data);
+};
+
+/** 查询所有商品信息 */
+export const fetchAllProductList = async () => {
+  const data = await request.get<ApiPayManagement.Product[] | null>('/api/v1/Product/GetAllProductList');
+  return adapter(adapterAllProductList, data);
 };

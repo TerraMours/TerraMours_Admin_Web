@@ -143,3 +143,22 @@ declare namespace ApiGptManagement {
     createDate: Date | null;
   }
 }
+/** 支付模块 */
+declare namespace ApiPayManagement {
+  /** 商品 */
+  interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    discount: number;
+    categoryId: number;
+    stock: number | null;
+  }
+  /** 分类 */
+  interface Category {
+    id: number;
+    name: string;
+    description: string;
+  }
+}

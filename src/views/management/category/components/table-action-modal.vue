@@ -2,8 +2,11 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel">
       <n-grid :cols="12" :x-gap="18">
-        <n-form-item-grid-item :span="12" label="Key" path="roleName">
-          <n-input v-model:value="formModel.apiKey" />
+        <n-form-item-grid-item :span="12" label="分类" path="roleName">
+          <n-input v-model:value="formModel.name" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="12" label="分类描述" path="roleName">
+          <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -17,7 +20,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { fetchAddKeyOptions, fetchChangeKeyOptions } from '@/service';
+import { AddCategory, UpdateCategory } from '@/service';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -29,7 +32,7 @@ export interface Props {
    */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: GptManagement.KeyOption | null;
+  editData?: PayManagement.Category | null;
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -69,14 +72,15 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<GptManagement.KeyOption, 'keyId' | 'apiKey'>;
+type FormModel = Pick<PayManagement.Category, 'id' | 'name' | 'description'>;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 function createDefaultFormModel(): FormModel {
   return {
-    keyId: 0,
-    apiKey: ''
+    id: 0,
+    name: '',
+    description: ''
   };
 }
 
@@ -104,7 +108,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
-      const { data } = await fetchAddKeyOptions(formModel.apiKey);
+      const { data } = await AddCategory(formModel.name, formModel.description);
       if (data) {
         window.$message?.success('新增成功!');
 
@@ -113,7 +117,7 @@ async function handleSubmit() {
     },
     edit: async () => {
       if (props.editData) {
-        const { data } = await fetchChangeKeyOptions(formModel.keyId, formModel.apiKey);
+        const { data } = await UpdateCategory(formModel.id, formModel.name, formModel.description);
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();

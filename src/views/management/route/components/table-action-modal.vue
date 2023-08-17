@@ -19,20 +19,20 @@
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="类型" path="menuName">
           <n-switch v-model:value="formModel.externalUrl">
-            <template #checked> 外链 </template>
-            <template #unchecked> 路由 </template>
+            <template #checked>外链</template>
+            <template #unchecked>路由</template>
           </n-switch>
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="可见" path="isShow">
           <n-switch v-model:value="formModel.isShow">
-            <template #checked> 可见 </template>
-            <template #unchecked> 不可见 </template>
+            <template #checked>可见</template>
+            <template #unchecked>不可见</template>
           </n-switch>
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="首页" path="isHome">
           <n-switch v-model:value="formModel.isHome">
-            <template #checked> 是 </template>
-            <template #unchecked> 否 </template>
+            <template #checked>是</template>
+            <template #unchecked>否</template>
           </n-switch>
         </n-form-item-grid-item>
       </n-grid>

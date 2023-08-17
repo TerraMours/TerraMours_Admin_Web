@@ -269,3 +269,67 @@ export function fetchChangePromptOption(promptId:number,act: string | null,Promp
 export function fetchDeletePromptOption(promptId:number){
   return request.get<boolean>('/api/v1/Chat/DeletePromptOption',{promptId});
 }
+
+/**
+ * 新增商品分类
+ * @param Name 分类名称
+ * @param Description 分类描述
+ * @returns 
+ */
+export function AddCategory(Name: string,Description: string){
+  return request.post<boolean>('/api/v1/Category/AddCategory',{Name,Description});
+}
+/**
+ * 更新分类信息
+ * @param Id 
+ * @param Name 分类名称
+ * @param Description 分类描述
+ * @returns 
+ */
+export function UpdateCategory(Id:number,Name: string,Description: string){
+  return request.put<boolean>('/api/v1/Category/UpdateCategory',{Id,Name,Description});
+}
+/**
+ * 删除分类信息
+ * @param id 
+ * @returns 
+ */
+export function DeleteCategory(id:number){
+  return request.put<boolean>('/api/v1/Category/DeleteCategory?id='+id);
+}
+
+/**
+ * 增加商品
+ * @param Name 商品名称
+ * @param Description 商品描述
+ * @param Price 商品价格
+ * @param Discount 商品折扣 默认不打折
+ * @param CategoryId 商品分类Id
+ * @param Stock 商品库存
+ * @returns 
+ */
+export function AddProduct(Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null){
+  return request.post<boolean>('/api/v1/Product/AddProduct',{Name,Description,Price,Discount,CategoryId,Stock});
+}
+/**
+ * 修改商品信息
+ * @param Id 
+ * @param Name 商品名称
+ * @param Description 商品描述
+ * @param Price 商品价格
+ * @param Discount 商品折扣 默认不打折
+ * @param CategoryId 商品分类Id
+ * @param Stock 商品库存
+ * @returns 
+ */
+export function UpdateProduct(Id:number,Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null){
+  return request.put<boolean>('/api/v1/Product/UpdateProduct',{Id,Name,Description,Price,Discount,CategoryId,Stock});
+}
+/**
+ * 删除商品
+ * @param id 
+ * @returns 
+ */
+export function DeleteProduct(id:number){
+  return request.put<boolean>('/api/v1/Product/DeleteProduct?id='+id);
+}
