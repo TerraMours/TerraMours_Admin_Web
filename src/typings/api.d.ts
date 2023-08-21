@@ -62,6 +62,8 @@ declare namespace ApiUserManagement {
     enableLogin: boolean;
     /** 角色id */
     roleId: number;
+    /** 余额 */
+    balance: number;
   }
   interface Role {
     /** 角色id */

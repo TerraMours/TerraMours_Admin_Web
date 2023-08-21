@@ -72,8 +72,23 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
     align: 'center'
   },
   {
+    key: 'userEmail',
+    title: '邮箱',
+    align: 'center'
+  },
+  {
     key: 'userName',
     title: '用户名',
+    align: 'center'
+  },
+  {
+    key: 'userPhoneNum',
+    title: '手机号码',
+    align: 'center'
+  },
+  {
+    key: 'balance',
+    title: '余额',
     align: 'center'
   },
   {
@@ -92,16 +107,6 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
 
       return <span></span>;
     }
-  },
-  {
-    key: 'userPhoneNum',
-    title: '手机号码',
-    align: 'center'
-  },
-  {
-    key: 'userEmail',
-    title: '邮箱',
-    align: 'center'
   },
   {
     key: 'enableLogin',

@@ -81,8 +81,8 @@ export function fetchDelUser(userId: number){
  * @param enableLogin 
  * @returns 
  */
-export function fetchUpdateUser(userId:number  | null,userName:string | null,userEmail:string | null,userPhoneNum:string | null,gender:string | null,enableLogin:boolean | null,roleId:number |null){
-return request.post<boolean>('/api/v1/User/UpdateUser',{userId,userName,userEmail,userPhoneNum,gender,enableLogin,roleId});
+export function fetchUpdateUser(userId:number  | null,userName:string | null,userEmail:string | null,userPhoneNum:string | null,gender:string | null,enableLogin:boolean | null,roleId:number |null,balance:number|null){
+return request.post<boolean>('/api/v1/User/UpdateUser',{userId,userName,userEmail,userPhoneNum,gender,enableLogin,roleId,balance});
 }
 
 /**

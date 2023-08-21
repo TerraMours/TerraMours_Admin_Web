@@ -22,6 +22,9 @@
         <n-form-item-grid-item :span="12" label="是否启用" path="enableLogin">
           <n-switch v-model:value="formModel.enableLogin" />
         </n-form-item-grid-item>
+        <n-form-item-grid-item :span="12" label="余额">
+          <n-input-number v-model:value="formModel.balance" />
+        </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
         <n-button class="w-72px" @click="closeModal">取消</n-button>
@@ -94,7 +97,7 @@ const formRef = ref<HTMLElement & FormInst>();
 
 type FormModel = Pick<
   UserManagement.User,
-  'userId' | 'userName' | 'gender' | 'userPhoneNum' | 'userEmail' | 'enableLogin' | 'roleId'
+  'userId' | 'userName' | 'gender' | 'userPhoneNum' | 'userEmail' | 'enableLogin' | 'roleId' | 'balance'
 >;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
@@ -114,7 +117,8 @@ function createDefaultFormModel(): FormModel {
     userPhoneNum: '',
     userEmail: null,
     enableLogin: true,
-    roleId: 10
+    roleId: 10,
+    balance: 0
   };
 }
 
@@ -165,7 +169,8 @@ async function handleSubmit() {
           formModel.userPhoneNum,
           formModel.gender,
           formModel.enableLogin,
-          formModel.roleId
+          formModel.roleId,
+          formModel.balance
         );
         if (data) {
           window.$message?.success('更新成功!');
