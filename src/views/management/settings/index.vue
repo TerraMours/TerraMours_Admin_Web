@@ -101,7 +101,7 @@
         </n-grid>
       </n-form>
       </n-card>
-      <n-card title="图片服务设置" :bordered="false" class="rounded-16px shadow-sm ">
+      <n-card title="图片服务设置" :bordered="false" class="rounded-16px shadow-sm " style="margin-top: 20px;">
         <n-switch v-model:value="updateImageDisabled" @update:value="handleImageChange">
           <template #checked>
             点击保存
