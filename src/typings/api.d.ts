@@ -108,9 +108,9 @@ declare namespace ApiUserManagement {
 declare namespace ApiGptManagement {
   interface PageData<T> {
     items: T[];
-    total: number | undefined;
-    page: number | undefined;
-    pageSize: number | undefined;
+    total: number;
+    page: number;
+    pageSize: number;
   }
   //* *敏感词 */
   interface Sensitive {
@@ -143,6 +143,49 @@ declare namespace ApiGptManagement {
     prompt: string | null;
     usedCount: number | null;
     createDate: Date | null;
+  }
+  /** 邮箱设置 */
+  interface Email {
+    host: string;
+    port: number;
+    useSsl: boolean;
+    senderEmail: string;
+    senderName: string;
+    senderPassword: string;
+  }
+  /** AI配置 */
+  interface OpenAIOptions {
+    tokenPrice: number;
+    openAI: OpenAI | null;
+    azureOpenAI: null;
+  }
+  /** openai */
+  interface OpenAI {
+    keyList: string[];
+    maxTokens: number | null;
+    temperature: number | null;
+    frequencyPenalty: number | null;
+    presencePenalty: number | null;
+    chatModel: string;
+    topP: number | null;
+    contextCount: number | null;
+    maxQuestions: number | null;
+    baseUrl: string;
+    gpt4Url: string;
+    gpt4Key: string;
+    textModel: string;
+  }
+  /** 图片生成配置 */
+  interface ImagOptions {
+    imagePrice: number;
+    imagFileBaseUrl: string | null;
+    sdOptions: SDOptions[];
+  }
+  /** Stable Diffusion 配置 */
+  interface SDOptions {
+    label: string | null;
+    baseUrl: string | null;
+    negative_Prompt: string | null;
   }
 }
 /** 支付模块 */

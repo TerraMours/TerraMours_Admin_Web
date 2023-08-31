@@ -333,3 +333,30 @@ export function UpdateProduct(Id:number,Name: string,Description: string,Price: 
 export function DeleteProduct(id:number){
   return request.put<boolean>('/api/v1/Product/DeleteProduct?id='+id);
 }
+
+/**获取邮箱设置 */
+export function GetEmailSettings(){
+  return request.get<ApiGptManagement.Email>('/api/v1/Settings/GetEmailSettings');
+}
+/**修改邮箱设置 */
+export function ChangeEmailSettings(email:ApiGptManagement.Email){
+  return request.post<boolean>('/api/v1/Settings/ChangeEmailSettings',email);
+}
+
+/**获取AI设置 */
+export function GetOpenAIOptions(){
+  return request.get<ApiGptManagement.OpenAIOptions>('/api/v1/Settings/GetOpenAIOptions');
+}
+/**修改AI设置 */
+export function ChangeOpenAIOptions(email:ApiGptManagement.OpenAIOptions){
+  return request.post<boolean>('/api/v1/Settings/ChangeOpenAIOptions',email);
+}
+
+/**获取图片生成配置 */
+export function GetImagOptions(){
+  return request.get<ApiGptManagement.ImagOptions>('/api/v1/Settings/GetImagOptions');
+}
+/**修改图片生成设置 */
+export function ChangeImagOptions(email:ApiGptManagement.ImagOptions){
+  return request.post<boolean>('/api/v1/Settings/ChangeImagOptions',email);
+}

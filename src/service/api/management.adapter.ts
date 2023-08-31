@@ -92,7 +92,7 @@ export function adapterOfFetchPageSensitiveList(
     items,
     page: data.page,
     pageSize: data.pageSize,
-    total: undefined
+    total: data.total
   };
   return PageData;
 }
@@ -119,7 +119,7 @@ export function adapterOfFetchPageChatList(
     items,
     page: data.page,
     pageSize: data.pageSize,
-    total: undefined
+    total: data.total
   };
   return PageData;
 }
@@ -146,7 +146,7 @@ export function adapterOfFetchPageKeyOptionList(
     items,
     page: data.page,
     pageSize: data.pageSize,
-    total: undefined
+    total: data.total
   };
   return PageData;
 }
@@ -173,7 +173,7 @@ export function adapterOfFetchPagePromptOptionList(
     items,
     page: data.page,
     pageSize: data.pageSize,
-    total: undefined
+    total: data.total
   };
   return PageData;
 }
