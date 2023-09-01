@@ -199,7 +199,7 @@ declare namespace ApiPayManagement {
     discount: number;
     categoryId: number;
     stock: number | null;
-    isVIP: boolean | null;
+    isVIP: boolean;
     vipLevel: number | null;
     vipTime: number | null;
   }

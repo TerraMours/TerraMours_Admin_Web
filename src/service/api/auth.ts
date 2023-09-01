@@ -308,8 +308,9 @@ export function DeleteCategory(id:number){
  * @param Stock 商品库存
  * @returns 
  */
-export function AddProduct(Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null){
-  return request.post<boolean>('/api/v1/Product/AddProduct',{Name,Description,Price,Discount,CategoryId,Stock});
+export function AddProduct(Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null,isVIP: boolean | null,
+  vipLevel: number | null,vipTime: number | null){
+  return request.post<boolean>('/api/v1/Product/AddProduct',{Name,Description,Price,Discount,CategoryId,Stock,isVIP,vipLevel,vipTime});
 }
 /**
  * 修改商品信息
@@ -322,8 +323,9 @@ export function AddProduct(Name: string,Description: string,Price: number,Discou
  * @param Stock 商品库存
  * @returns 
  */
-export function UpdateProduct(Id:number,Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null){
-  return request.put<boolean>('/api/v1/Product/UpdateProduct',{Id,Name,Description,Price,Discount,CategoryId,Stock});
+export function UpdateProduct(Id:number,Name: string,Description: string,Price: number,Discount:number,CategoryId:number,Stock:number|null,isVIP: boolean | null,
+  vipLevel: number | null,vipTime: number | null){
+  return request.put<boolean>('/api/v1/Product/UpdateProduct',{Id,Name,Description,Price,Discount,CategoryId,Stock,isVIP,vipLevel,vipTime});
 }
 /**
  * 删除商品

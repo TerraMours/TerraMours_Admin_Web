@@ -107,8 +107,18 @@ const columns: Ref<DataTableColumns<PayManagement.Product>> = ref([
     align: 'center'
   },
   {
-    key: 'stock',
-    title: '商品库存',
+    key: 'isVIP',
+    title: '是否VIP',
+    align: 'center'
+  },
+  {
+    key: 'vipLevel',
+    title: 'VIP等级',
+    align: 'center'
+  },
+  {
+    key: 'vipTime',
+    title: '充值时间（月）',
     align: 'center'
   },
   {
