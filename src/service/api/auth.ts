@@ -360,3 +360,13 @@ export function GetImagOptions(){
 export function ChangeImagOptions(email:ApiGptManagement.ImagOptions){
   return request.post<boolean>('/api/v1/Settings/ChangeImagOptions',email);
 }
+
+/**导入系统提示词(文件) */
+export function ImportPromptOptionByFile(file:File){
+  return request.post<boolean>('/api/v1/Chat/ImportPromptOptionByFile',{file},{headers : {"Content-Type":'multipart/form-data'}});
+}
+
+/**导入敏感词字典(文件) */
+export function ImportSensitive(file:File){
+  return request.post<boolean>('/api/v1/Chat/ImportSensitive',{file},{headers : {"Content-Type":'multipart/form-data'}});
+}
