@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full overflow-hidden">
-    <n-card title="聊天记录管理" :bordered="false" class="rounded-16px shadow-sm">
+  <div class="h-full overflow-y-auto">
+    <n-card title="聊天记录管理" :bordered="false" class="rounded-16px shadow-sm ">
       <n-space class="pb-12px" justify="space-between">
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -9,7 +9,7 @@
           </n-button>
         </n-space>
       </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+      <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
     </n-card>
   </div>
 </template>
@@ -17,7 +17,7 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { DataTableColumns, PaginationProps } from 'naive-ui';
 import { fetchChatList } from '@/service';
 import { useLoading } from '@/hooks';
 
@@ -40,7 +40,10 @@ const pagination: PaginationProps = reactive({
     pagination.pageSize = pageSize;
     pagination.page = 1;
     getTableData();
-  }
+  },
+  prefix ({ itemCount }) {
+        return `Total is ${itemCount}.`
+      }
 });
 
 async function getTableData() {
@@ -50,7 +53,7 @@ async function getTableData() {
     setTimeout(() => {
       setTableData(data.items);
       pagination.itemCount = data.total;
-      pagination.pageCount = data.page;
+      pagination.pageCount = data.page  =Math.ceil(data.total/data.pageSize);
       endLoading();
     }, 1000);
   }
@@ -58,8 +61,20 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
   {
+      type: 'expand',
+      maxWidth: 10,
+      renderExpand: (rowData) => {
+        return `${rowData.message}`
+      }
+    },
+  {
     key: 'index',
     title: '序号',
+    align: 'center'
+  },
+  {
+    key: 'userId',
+    title: '发起用户',
     align: 'center'
   },
   {
@@ -79,14 +94,10 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     }
   },
   {
-    key: 'userId',
-    title: '发起用户',
-    align: 'center'
-  },
-  {
     key: 'createDate',
     title: '创建时间',
-    align: 'center'
+    align: 'center',
+    
   }
 ]) as Ref<DataTableColumns<GptManagement.Chat>>;
 
