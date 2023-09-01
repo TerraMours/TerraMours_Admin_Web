@@ -199,6 +199,9 @@ declare namespace ApiPayManagement {
     discount: number;
     categoryId: number;
     stock: number | null;
+    isVIP: boolean | null;
+    vipLevel: number | null;
+    vipTime: number | null;
   }
   /** 分类 */
   interface Category {
