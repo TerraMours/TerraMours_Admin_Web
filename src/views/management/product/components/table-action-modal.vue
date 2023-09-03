@@ -2,6 +2,12 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel">
       <n-grid :cols="24" :x-gap="18">
+        <n-form-item-grid-item :span="24" label="充值类型" path="roleName">
+          <n-switch v-model:value="formModel.isVIP">
+            <template #checked> 会员类型 </template>
+            <template #unchecked> 充值类型 </template>
+          </n-switch>
+        </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="商品名称" path="roleName">
           <n-input v-model:value="formModel.name" />
         </n-form-item-grid-item>
@@ -15,6 +21,13 @@
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="商品折扣" path="roleName">
           <n-input-number v-model:value="formModel.discount" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item v-if="formModel.isVIP" :span="12" label="会员等级" path="roleName">
+          <n-input-number v-model:value="formModel.vipLevel" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item v-if="formModel.isVIP" :span="12" label="充值时间" path="roleName">
+          <n-input-number v-model:value="formModel.vipTime" />
+          月
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="商品库存" path="roleName">
           <n-input-number v-model:value="formModel.stock" />
@@ -89,7 +102,7 @@ const formRef = ref<HTMLElement & FormInst>();
 
 type FormModel = Pick<
   PayManagement.Product,
-  'id' | 'name' | 'description' | 'price' | 'discount' | 'categoryId' | 'stock'
+  'id' | 'name' | 'description' | 'price' | 'discount' | 'categoryId' | 'stock' | 'isVIP' | 'vipLevel' | 'vipTime'
 >;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
@@ -102,7 +115,10 @@ function createDefaultFormModel(): FormModel {
     price: 0,
     discount: 0,
     categoryId: 0,
-    stock: null
+    stock: null,
+    isVIP: false,
+    vipLevel: 0,
+    vipTime: 0
   };
 }
 
@@ -136,7 +152,10 @@ async function handleSubmit() {
         formModel.price,
         formModel.discount,
         formModel.categoryId,
-        formModel.stock
+        formModel.stock,
+        formModel.isVIP,
+        formModel.vipLevel,
+        formModel.vipTime
       );
       if (data) {
         window.$message?.success('新增成功!');
@@ -153,7 +172,10 @@ async function handleSubmit() {
           formModel.price,
           formModel.discount,
           formModel.categoryId,
-          formModel.stock
+          formModel.stock,
+          formModel.isVIP,
+          formModel.vipLevel,
+          formModel.vipTime
         );
         if (data) {
           window.$message?.success('更新成功!');
