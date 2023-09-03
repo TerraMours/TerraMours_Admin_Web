@@ -202,6 +202,7 @@ declare namespace ApiPayManagement {
     isVIP: boolean;
     vipLevel: number | null;
     vipTime: number | null;
+    imagePath: string | null | undefined;
   }
   /** 分类 */
   interface Category {
