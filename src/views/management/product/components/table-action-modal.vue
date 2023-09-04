@@ -8,6 +8,17 @@
             <template #unchecked> 充值类型 </template>
           </n-switch>
         </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" label="商品图片" path="roleName">
+          <n-upload
+            v-model:file-list="fileList"
+            :action="uploadUrl"
+            :headers="{ Authorization: `Bearer ${localStg.get('token')}` }"
+            list-type="image-card"
+            :max="1"
+            accept="image/png, image/jpeg"
+            @finish="handleFinish"
+          />
+        </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="商品名称" path="roleName">
           <n-input v-model:value="formModel.name" />
         </n-form-item-grid-item>
@@ -46,10 +57,12 @@
 
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from 'vue';
-import type { FormInst } from 'naive-ui';
-import { AddProduct, UpdateProduct, fetchAllCategoryList } from '@/service';
-
+import type { FormInst, UploadFileInfo } from 'naive-ui';
+import { AddProduct, UpdateProduct, fetchAllCategoryList, apiUrl } from '@/service';
+import { localStg } from '@/utils';
+const fileList = ref<UploadFileInfo[]>();
 let options: { value: string | number; label: string }[] = [];
+const uploadUrl = `${apiUrl}/api/v1/Product/UploadProductImage`;
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -102,7 +115,17 @@ const formRef = ref<HTMLElement & FormInst>();
 
 type FormModel = Pick<
   PayManagement.Product,
-  'id' | 'name' | 'description' | 'price' | 'discount' | 'categoryId' | 'stock' | 'isVIP' | 'vipLevel' | 'vipTime'
+  | 'id'
+  | 'name'
+  | 'description'
+  | 'price'
+  | 'discount'
+  | 'categoryId'
+  | 'stock'
+  | 'isVIP'
+  | 'vipLevel'
+  | 'vipTime'
+  | 'imagePath'
 >;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
@@ -118,12 +141,25 @@ function createDefaultFormModel(): FormModel {
     stock: null,
     isVIP: false,
     vipLevel: 0,
-    vipTime: 0
+    vipTime: 0,
+    imagePath: ''
   };
 }
 
 function handleUpdateFormModel(model: Partial<FormModel>) {
   Object.assign(formModel, model);
+  if (model.imagePath !== null) {
+    fileList.value = [
+      {
+        id: 'c',
+        name: '我是自带url的图片.png',
+        status: 'finished',
+        url: model.imagePath
+      }
+    ];
+  } else {
+    fileList.value = [];
+  }
 }
 
 function handleUpdateFormModelByModalType() {
@@ -141,9 +177,14 @@ function handleUpdateFormModelByModalType() {
 
   handlers[props.type]();
 }
-
+const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  const res = JSON.parse((event?.target as XMLHttpRequest).response);
+  file.url = `${apiUrl}${res.data}`;
+  return file;
+};
 async function handleSubmit() {
   await formRef.value?.validate();
+  if (fileList.value !== null && fileList.value![0] !== null) formModel.imagePath = fileList.value![0].url;
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
       const { data } = await AddProduct(
@@ -155,7 +196,8 @@ async function handleSubmit() {
         formModel.stock,
         formModel.isVIP,
         formModel.vipLevel,
-        formModel.vipTime
+        formModel.vipTime,
+        formModel.imagePath
       );
       if (data) {
         window.$message?.success('新增成功!');
@@ -175,7 +217,8 @@ async function handleSubmit() {
           formModel.stock,
           formModel.isVIP,
           formModel.vipLevel,
-          formModel.vipTime
+          formModel.vipTime,
+          formModel.imagePath
         );
         if (data) {
           window.$message?.success('更新成功!');
