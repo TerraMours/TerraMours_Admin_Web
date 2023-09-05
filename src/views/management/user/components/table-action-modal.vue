@@ -66,13 +66,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+  (e: 'updateDataTable'): void;
 }
 
 const emit = defineEmits<Emits>();
 
 const modalVisible = computed({
   get() {
-    if (props.visible === true) {
+    if (props.visible) {
       getRoleData();
     }
     return props.visible;
@@ -156,8 +157,8 @@ async function handleSubmit() {
       );
       if (data) {
         window.$message?.success('新增成功!');
-
         closeModal();
+        emit('updateDataTable');
       }
     },
     edit: async () => {
@@ -175,6 +176,7 @@ async function handleSubmit() {
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();
+          emit('updateDataTable');
         }
       }
     }

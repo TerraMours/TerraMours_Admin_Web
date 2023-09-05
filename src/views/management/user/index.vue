@@ -25,7 +25,7 @@
         </n-space>
       </n-space>
       <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
-      <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" />
+      <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
 </template>

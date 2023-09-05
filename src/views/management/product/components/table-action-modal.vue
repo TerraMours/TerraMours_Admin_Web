@@ -4,8 +4,8 @@
       <n-grid :cols="24" :x-gap="18">
         <n-form-item-grid-item :span="24" label="充值类型" path="roleName">
           <n-switch v-model:value="formModel.isVIP">
-            <template #checked> 会员类型 </template>
-            <template #unchecked> 充值类型 </template>
+            <template #checked>会员类型</template>
+            <template #unchecked>充值类型</template>
           </n-switch>
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" label="商品图片" path="roleName">
@@ -87,6 +87,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+  (e: 'updateDataTable'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -201,7 +202,7 @@ async function handleSubmit() {
       );
       if (data) {
         window.$message?.success('新增成功!');
-
+        emit('updateDataTable');
         closeModal();
       }
     },
@@ -223,6 +224,7 @@ async function handleSubmit() {
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();
+          emit('updateDataTable');
         }
       }
     }

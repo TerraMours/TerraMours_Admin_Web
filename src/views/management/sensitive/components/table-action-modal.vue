@@ -43,6 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+  (e: 'updateDataTable'): void; // 添加一个名为'closeModal'的自定义事件
 }
 
 const emit = defineEmits<Emits>();
@@ -107,8 +108,8 @@ async function handleSubmit() {
       const { data } = await fetchAddSensitive(formModel.word);
       if (data) {
         window.$message?.success('新增成功!');
-
         closeModal();
+        emit('updateDataTable');
       }
     },
     edit: async () => {
@@ -117,6 +118,7 @@ async function handleSubmit() {
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();
+          emit('updateDataTable');
         }
       }
     }
