@@ -62,7 +62,8 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
   {
       type: 'expand',
-      maxWidth: 10,
+			title: '展开',
+			width: 1,
       renderExpand: (rowData) => {
         return `${rowData.message}`
       }
@@ -70,25 +71,27 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
   {
     key: 'index',
     title: '序号',
-    align: 'center'
+    align: 'center',
+		width: 5,
   },
   {
     key: 'userId',
     title: '发起用户',
-    align: 'center'
+    align: 'center',
+		width: 5,
   },
   {
     key: 'role',
     title: '角色',
-    align: 'center'
+    align: 'center',
+		width: 5,
   },
   {
     key: 'message',
     title: '消息',
     align: 'center',
     resizable: true,
-    minWidth: 500,
-    maxWidth: 1000,
+		width: 30,
     ellipsis: {
       tooltip: true
     }
@@ -97,7 +100,7 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     key: 'createDate',
     title: '创建时间',
     align: 'center',
-    
+		width: 20,
   }
 ]) as Ref<DataTableColumns<GptManagement.Chat>>;
 

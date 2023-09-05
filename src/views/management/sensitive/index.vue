@@ -28,7 +28,7 @@
             :disabled="!fileList?.length"
             style="margin-bottom: 12px"
             @click="handleClick"
-            
+
           >
             上传文件
           </n-button>
@@ -43,7 +43,7 @@
           </n-upload>
       </n-space>
       <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
-      <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" />
+      <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
 </template>

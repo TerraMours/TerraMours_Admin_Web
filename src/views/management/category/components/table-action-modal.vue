@@ -46,6 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+  (e: 'updateDataTable'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -111,7 +112,7 @@ async function handleSubmit() {
       const { data } = await AddCategory(formModel.name, formModel.description);
       if (data) {
         window.$message?.success('新增成功!');
-
+        emit('updateDataTable');
         closeModal();
       }
     },
@@ -121,6 +122,7 @@ async function handleSubmit() {
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();
+          emit('updateDataTable');
         }
       }
     }
