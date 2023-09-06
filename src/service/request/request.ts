@@ -56,7 +56,7 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: S
     url=mergeUrlAndParams(url,data);
     return asyncRequest<T>({ url, method: 'get', axiosConfig: config });
   }
-
+ 
 /**
  * 拼接url
  * @param url 

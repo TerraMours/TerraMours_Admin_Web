@@ -91,3 +91,21 @@ declare namespace GptManagement {
     key: number;
   }
 }
+
+/** 支付模块 */
+declare namespace PayManagement {
+  /** 商品 */
+  interface Product extends ApiPayManagement.Product {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+  /** 分类 */
+  interface Category extends ApiPayManagement.Category {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+}

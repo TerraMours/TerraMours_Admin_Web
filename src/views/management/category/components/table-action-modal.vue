@@ -2,8 +2,11 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel">
       <n-grid :cols="12" :x-gap="18">
-        <n-form-item-grid-item :span="12" label="敏感词" path="roleName">
-          <n-input v-model:value="formModel.word" />
+        <n-form-item-grid-item :span="12" label="分类" path="roleName">
+          <n-input v-model:value="formModel.name" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="12" label="分类描述" path="roleName">
+          <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -17,7 +20,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { fetchAddSensitive, fetchChangeSensitive } from '@/service';
+import { AddCategory, UpdateCategory } from '@/service';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -29,7 +32,7 @@ export interface Props {
    */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: GptManagement.Sensitive | null;
+  editData?: PayManagement.Category | null;
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -43,7 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-  (e: 'updateDataTable'): void; // 添加一个名为'closeModal'的自定义事件
+  (e: 'updateDataTable'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -62,22 +65,23 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加敏感词',
-    edit: '编辑敏感词'
+    add: '添加分类',
+    edit: '编辑分类'
   };
   return titles[props.type];
 });
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<GptManagement.Sensitive, 'sensitiveId' | 'word'>;
+type FormModel = Pick<PayManagement.Category, 'id' | 'name' | 'description'>;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 function createDefaultFormModel(): FormModel {
   return {
-    sensitiveId: 0,
-    word: ''
+    id: 0,
+    name: '',
+    description: ''
   };
 }
 
@@ -105,16 +109,16 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
-      const { data } = await fetchAddSensitive(formModel.word);
+      const { data } = await AddCategory(formModel.name, formModel.description);
       if (data) {
         window.$message?.success('新增成功!');
-        closeModal();
         emit('updateDataTable');
+        closeModal();
       }
     },
     edit: async () => {
       if (props.editData) {
-        const { data } = await fetchChangeSensitive(formModel.sensitiveId, formModel.word);
+        const { data } = await UpdateCategory(formModel.id, formModel.name, formModel.description);
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();

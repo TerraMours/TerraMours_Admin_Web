@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full overflow-hidden">
-    <n-card title="聊天记录管理" :bordered="false" class="rounded-16px shadow-sm">
+  <div class="h-full overflow-y-auto">
+    <n-card title="聊天记录管理" :bordered="false" class="rounded-16px shadow-sm ">
       <n-space class="pb-12px" justify="space-between">
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -9,7 +9,7 @@
           </n-button>
         </n-space>
       </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+      <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
     </n-card>
   </div>
 </template>
@@ -17,12 +17,12 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { DataTableColumns, PaginationProps } from 'naive-ui';
 import { fetchChatList } from '@/service';
 import { useLoading } from '@/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
-const queryString = ref('');
+const queryString = ref(null);
 const tableData = ref<GptManagement.Chat[]>([]);
 function setTableData(data: GptManagement.Chat[]) {
   tableData.value = data;
@@ -40,7 +40,10 @@ const pagination: PaginationProps = reactive({
     pagination.pageSize = pageSize;
     pagination.page = 1;
     getTableData();
-  }
+  },
+  prefix ({ itemCount }) {
+        return `Total is ${itemCount}.`
+      }
 });
 
 async function getTableData() {
@@ -50,7 +53,7 @@ async function getTableData() {
     setTimeout(() => {
       setTableData(data.items);
       pagination.itemCount = data.total;
-      pagination.pageCount = data.page;
+      pagination.pageCount = data.page  =Math.ceil(data.total/data.pageSize);
       endLoading();
     }, 1000);
   }
@@ -58,35 +61,52 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
   {
+      type: 'expand',
+			title: '展开',
+			width: 1,
+      renderExpand: (rowData) => {
+        return `${rowData.message}`
+      }
+    },
+  {
     key: 'index',
     title: '序号',
-    align: 'center'
+    align: 'center',
+		width: 5,
+  },
+  {
+    key: 'userId',
+    title: '发起用户',
+    align: 'center',
+		width: 5,
   },
   {
     key: 'role',
     title: '角色',
-    align: 'center'
+    align: 'center',
+		width: 5,
   },
   {
     key: 'message',
     title: '消息',
     align: 'center',
     resizable: true,
-    minWidth: 500,
-    maxWidth: 1000,
+		width: 30,
     ellipsis: {
       tooltip: true
     }
   },
   {
-    key: 'userId',
-    title: '发起用户',
-    align: 'center'
-  },
-  {
     key: 'createDate',
     title: '创建时间',
-    align: 'center'
+    align: 'center',
+		width: 20,
+		render: (rowData) => {
+			const date = new Date(rowData.createDate);
+			const formattedDate = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+			const formattedTime = `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
+			return `${formattedDate} ${formattedTime}`;
+		}
   }
 ]) as Ref<DataTableColumns<GptManagement.Chat>>;
 
