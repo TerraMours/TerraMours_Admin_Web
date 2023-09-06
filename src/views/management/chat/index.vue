@@ -101,6 +101,12 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     title: '创建时间',
     align: 'center',
 		width: 20,
+		render: (rowData) => {
+			const date = new Date(rowData.createDate);
+			const formattedDate = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+			const formattedTime = `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
+			return `${formattedDate} ${formattedTime}`;
+		}
   }
 ]) as Ref<DataTableColumns<GptManagement.Chat>>;
 
