@@ -373,3 +373,8 @@ export function ImportPromptOptionByFile(file:File){
 export function ImportSensitive(file:File){
   return request.post<boolean>('/api/v1/Chat/ImportSensitive',{file},{headers : {"Content-Type":'multipart/form-data'}});
 }
+
+/**分享图片 */
+export function ShareImage(imageRecordId: number, isPublic: boolean){
+	return request.get<boolean>('/api/v1/Image/ShareImage',{imageRecordId,isPublic});
+}

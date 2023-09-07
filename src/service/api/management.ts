@@ -10,7 +10,8 @@ import {
   adapterOfFetchPageKeyOptionList,
   adapterOfFetchPagePromptOptionList,
   adapterAllCategoryList,
-  adapterAllProductList
+  adapterAllProductList,
+  adapterOfFetchPageAllImageList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -65,6 +66,18 @@ export const fetchChatList = async (
     { queryString, pageIndex, pageSize }
   );
   return adapter(adapterOfFetchPageChatList, data);
+};
+/** 获取聊天记录列表 */
+export const fetchAllImageList = async (
+  queryString: string | null,
+  pageIndex: number | undefined,
+  pageSize: number | undefined
+) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.Image> | null>(
+    '/api/v1/Image/AllImageList',
+    { queryString, pageIndex, pageSize }
+  );
+  return adapter(adapterOfFetchPageAllImageList, data);
 };
 
 /** 获取key池 管理列表 */
