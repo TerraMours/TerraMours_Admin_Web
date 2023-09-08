@@ -8,6 +8,14 @@
             刷新表格
           </n-button>
         </n-space>
+				<n-space>
+					<n-input-group>
+						<n-input v-model:value="queryString" @keypress="handleEnter"/>
+						<n-button type="primary" @click="getTableData">
+							搜索
+						</n-button>
+					</n-input-group>
+				</n-space>
       </n-space>
       <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
     </n-card>
@@ -17,12 +25,17 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { DataTableColumns, PaginationProps } from 'naive-ui';
+import {DataTableColumns, NButton, NSpace, PaginationProps} from 'naive-ui';
 import { fetchChatList } from '@/service';
 import { useLoading } from '@/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const queryString = ref(null);
+const handleEnter = (event: KeyboardEvent) => {
+	if (event.key === 'Enter') {
+		getTableData()
+	}
+}
 const tableData = ref<GptManagement.Chat[]>([]);
 function setTableData(data: GptManagement.Chat[]) {
   tableData.value = data;
