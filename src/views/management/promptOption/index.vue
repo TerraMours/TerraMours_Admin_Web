@@ -23,6 +23,7 @@
           </n-button>
         </n-space>
       </n-space>
+			<n-space class="pb-12px" justify="space-between">
       <n-space class="pb-12px" >
         <n-button
             :disabled="!fileList?.length"
@@ -42,6 +43,15 @@
             <n-button>选择文件</n-button>
           </n-upload>
       </n-space>
+				<n-space>
+					<n-input-group>
+						<n-input v-model:value="queryString" @keypress="handleEnter"/>
+						<n-button type="primary" @click="getTableData">
+							搜索
+						</n-button>
+					</n-input-group>
+				</n-space>
+			</n-space>
       <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
@@ -86,6 +96,11 @@ const pagination: PaginationProps = reactive({
 });
 function getQueryString() {
   return queryString.value;
+}
+const handleEnter = (event: KeyboardEvent) => {
+	if (event.key === 'Enter') {
+		getTableData()
+	}
 }
 async function getTableData() {
   startLoading();
