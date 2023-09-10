@@ -4,3 +4,4 @@ router-page.d.ts
 *.svg
 auth.ts
 request.ts
+index.vue
