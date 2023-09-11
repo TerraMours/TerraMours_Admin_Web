@@ -126,6 +126,24 @@ declare namespace ApiGptManagement {
     userId: number;
     createDate: Date;
   }
+  /** 图片记录 */
+  interface Image {
+    collectCount: number;
+    createDate: Date;
+    forwardCount: number;
+    imagUrl: string;
+    imageRecordId: number;
+    ip: string;
+    isPublic: boolean;
+    likeCount: number;
+    model: string;
+    modelType?: number;
+    pranslatePrompt?: string;
+    prompt?: string;
+    size?: number;
+    userId: number;
+  }
+
   /** key池 管理 */
   interface KeyOption {
     keyId: number;

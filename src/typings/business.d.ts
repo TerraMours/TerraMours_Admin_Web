@@ -78,6 +78,12 @@ declare namespace GptManagement {
     /** 表格的key（id） */
     key: number;
   }
+  interface Image extends ApiGptManagement.Image {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
   interface KeyOption extends ApiGptManagement.KeyOption {
     /** 序号 */
     index: number;

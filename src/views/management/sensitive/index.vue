@@ -23,25 +23,35 @@
           </n-button>
         </n-space>
       </n-space>
-      <n-space class="pb-12px" >
-        <n-button
-            :disabled="!fileList?.length"
-            style="margin-bottom: 12px"
-            @click="handleClick"
+			<n-space class="pb-12px" justify="space-between">
+				<n-space class="pb-12px" >
+					<n-button
+						:disabled="!fileList?.length"
+						style="margin-bottom: 12px"
+						@click="handleClick"
 
-          >
-            上传文件
-          </n-button>
-          <n-upload
-            v-model:file-list="fileList"
-            action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
-            :default-upload="false"
-            @change="handleChange"
-            :max="1"
-          >
-            <n-button>选择文件</n-button>
-          </n-upload>
-      </n-space>
+					>
+						上传文件
+					</n-button>
+					<n-upload
+						v-model:file-list="fileList"
+						action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+						:default-upload="false"
+						@change="handleChange"
+						:max="1"
+					>
+						<n-button>选择文件</n-button>
+					</n-upload>
+				</n-space>
+				<n-space>
+					<n-input-group>
+						<n-input v-model:value="queryString" @keypress="handleEnter"/>
+						<n-button type="primary" @click="getTableData">
+							搜索
+						</n-button>
+					</n-input-group>
+				</n-space>
+			</n-space>
       <n-data-table remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
@@ -62,6 +72,11 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 const fileList = ref<UploadFileInfo[]>()
 const tableData = ref<GptManagement.Sensitive[]>([]);
 const queryString = ref(null);
+const handleEnter = (event: KeyboardEvent) => {
+	if (event.key === 'Enter') {
+		getTableData()
+	}
+}
 function setTableData(data: GptManagement.Sensitive[]) {
   tableData.value = data;
 }

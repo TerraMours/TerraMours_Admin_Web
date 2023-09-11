@@ -32,6 +32,7 @@ export const views: Record<
   management_auth: () => import('./management/auth/index.vue'),
   management_category: () => import('./management/category/index.vue'),
   management_chat: () => import('./management/chat/index.vue'),
+  management_image: () => import('./management/image/index.vue'),
   management_keyOption: () => import('./management/keyOption/index.vue'),
   management_product: () => import('./management/product/index.vue'),
   management_promptOption: () => import('./management/promptOption/index.vue'),

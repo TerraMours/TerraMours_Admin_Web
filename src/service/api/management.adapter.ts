@@ -123,7 +123,32 @@ export function adapterOfFetchPageChatList(
   };
   return PageData;
 }
+/**
+ * 图片记录
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchPageAllImageList(
+  data: ApiGptManagement.PageData<ApiGptManagement.Image> | null
+): ApiGptManagement.PageData<GptManagement.Image> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
+    const role: GptManagement.Image = {
+      index: index + 1,
+      key: item.imageRecordId,
+      ...item
+    };
 
+    return role;
+  });
+  const PageData: ApiGptManagement.PageData<GptManagement.Image> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: data.total
+  };
+  return PageData;
+}
 /**
  * key池 管理
  * @param data

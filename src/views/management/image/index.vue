@@ -1,6 +1,6 @@
 <template>
   <div class="h-full overflow-y-auto">
-    <n-card title="聊天记录管理" :bordered="false" class="rounded-16px shadow-sm ">
+    <n-card title="图片记录管理" :bordered="false" class="rounded-16px shadow-sm ">
       <n-space class="pb-12px" justify="space-between">
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -26,7 +26,7 @@
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import {DataTableColumns, NButton, NSpace, PaginationProps} from 'naive-ui';
-import { fetchChatList } from '@/service';
+import { fetchAllImageList, ShareImage } from '@/service';
 import { useLoading } from '@/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -36,8 +36,8 @@ const handleEnter = (event: KeyboardEvent) => {
 		getTableData()
 	}
 }
-const tableData = ref<GptManagement.Chat[]>([]);
-function setTableData(data: GptManagement.Chat[]) {
+const tableData = ref<GptManagement.Image[]>([]);
+function setTableData(data: GptManagement.Image[]) {
   tableData.value = data;
 }
 const pagination: PaginationProps = reactive({
@@ -59,9 +59,15 @@ const pagination: PaginationProps = reactive({
       }
 });
 
+const PublicChange = async (imageRecordId: number, isPublic: boolean) => {
+		const { data } = await ShareImage(imageRecordId, isPublic)
+		if (data){
+			window.$message?.success('操作成功!')
+		}
+}
 async function getTableData() {
   startLoading();
-  const { data } = await fetchChatList(getQueryString(), pagination.page, pagination.pageSize);
+  const { data } = await fetchAllImageList(getQueryString(), pagination.page, pagination.pageSize);
   if (data) {
     setTimeout(() => {
       setTableData(data.items);
@@ -72,13 +78,13 @@ async function getTableData() {
   }
 }
 
-const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
+const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
   {
       type: 'expand',
 			title: '展开',
-			width: 1,
+			width: 5,
       renderExpand: (rowData) => {
-        return `${rowData.message}`
+				return <n-image src={rowData.imagUrl}></n-image>;
       }
     },
   {
@@ -87,21 +93,27 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     align: 'center',
 		width: 5,
   },
+	{
+		key: 'userId',
+		title: '用户',
+		align: 'center',
+		width: 5,
+	},
   {
-    key: 'userId',
-    title: '发起用户',
+    key: 'modelType',
+    title: '模型类型',
     align: 'center',
 		width: 5,
   },
   {
-    key: 'role',
-    title: '角色',
+    key: 'model',
+    title: '模型',
     align: 'center',
 		width: 5,
   },
   {
-    key: 'message',
-    title: '消息',
+    key: 'prompt',
+    title: '提示词',
     align: 'center',
     resizable: true,
 		width: 30,
@@ -109,6 +121,16 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
       tooltip: true
     }
   },
+	{
+		key: 'pranslatePrompt',
+		title: '翻译文本',
+		align: 'center',
+		resizable: true,
+		width: 30,
+		ellipsis: {
+			tooltip: true
+		}
+	},
   {
     key: 'createDate',
     title: '创建时间',
@@ -120,8 +142,19 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
 			const formattedTime = `${("0" + date.getHours()).slice(-2)}:${("0" + date.getMinutes()).slice(-2)}:${("0" + date.getSeconds()).slice(-2)}`;
 			return `${formattedDate} ${formattedTime}`;
 		}
-  }
-]) as Ref<DataTableColumns<GptManagement.Chat>>;
+
+  },
+	{
+		key: 'isPublic',
+		title: '是否公开',
+		align: 'center',
+		width: 10,
+		render: row => {
+			return <n-switch v-model:value={row.isPublic} on-update:value={(value: boolean) =>{row.isPublic=value;
+				PublicChange(row.imageRecordId,value)}}></n-switch>;
+		}
+	},
+]) as Ref<DataTableColumns<GptManagement.Image>>;
 
 function getQueryString() {
   return queryString.value;
