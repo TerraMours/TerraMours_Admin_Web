@@ -11,7 +11,8 @@ import {
   adapterOfFetchPagePromptOptionList,
   adapterAllCategoryList,
   adapterAllProductList,
-  adapterOfFetchPageAllImageList
+  adapterOfFetchPageAllImageList,
+  adapterOfFetchPageOrderList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -124,4 +125,17 @@ export const fetchAllCategoryList = async () => {
 export const fetchAllProductList = async () => {
   const data = await request.get<ApiPayManagement.Product[] | null>('/api/v1/Product/GetAllProductList');
   return adapter(adapterAllProductList, data);
+};
+
+/** 获取聊天记录列表 */
+export const fetchOrderList = async (
+  queryString: string | null,
+  pageIndex: number | undefined,
+  pageSize: number | undefined
+) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiPayManagement.Order> | null>(
+    '/api/v1/AliPay/OrderList',
+    { queryString, pageIndex, pageSize }
+  );
+  return adapter(adapterOfFetchPageOrderList, data);
 };

@@ -34,6 +34,7 @@ export const views: Record<
   management_chat: () => import('./management/chat/index.vue'),
   management_image: () => import('./management/image/index.vue'),
   management_keyOption: () => import('./management/keyOption/index.vue'),
+  management_order: () => import('./management/order/index.vue'),
   management_product: () => import('./management/product/index.vue'),
   management_promptOption: () => import('./management/promptOption/index.vue'),
   management_role: () => import('./management/role/index.vue'),

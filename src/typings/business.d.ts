@@ -114,4 +114,10 @@ declare namespace PayManagement {
     /** 表格的key（id） */
     key: number;
   }
+  interface Order extends ApiPayManagement.Order {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
 }
