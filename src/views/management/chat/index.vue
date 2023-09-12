@@ -10,10 +10,10 @@
         </n-space>
 				<n-space>
 					<n-input-group>
-						<n-input v-model:value="queryString" @keypress="handleEnter"/>
-						<n-button type="primary" @click="getTableData">
-							搜索
-						</n-button>
+            <n-input v-model:value="queryString" @keypress="handleEnter" placeholder="请输入..（支持Enter）" clearable/>
+            <n-button type="primary" @click="searchData">
+              搜索
+            </n-button>
 					</n-input-group>
 				</n-space>
       </n-space>
@@ -33,8 +33,12 @@ const { loading, startLoading, endLoading } = useLoading(false);
 const queryString = ref(null);
 const handleEnter = (event: KeyboardEvent) => {
 	if (event.key === 'Enter') {
-		getTableData()
+    searchData()
 	}
+}
+async function searchData(){
+  pagination.page = 1;
+  getTableData();
 }
 const tableData = ref<GptManagement.Chat[]>([]);
 function setTableData(data: GptManagement.Chat[]) {
