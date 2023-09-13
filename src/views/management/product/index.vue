@@ -11,10 +11,6 @@
             <icon-ic-round-delete class="mr-4px text-20px" />
             删除
           </n-button>
-          <!-- <n-button type="success">
-            <icon-uil:export class="mr-4px text-20px" />
-            导出Excel
-          </n-button> -->
         </n-space>
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">

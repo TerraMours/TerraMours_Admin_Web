@@ -31,12 +31,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { type ECOption, useEcharts } from '@/composables';
+import { fetchAnalysisList } from '@/service';
+import TotalAnalysis = ApiAnalysisManagement.TotalAnalysis;
 
 defineOptions({ name: 'DashboardAnalysisTopCard' });
-
+const analysisData=ref<TotalAnalysis[]>([]);
 const lineOptions = ref<ECOption>({
   tooltip: {
     trigger: 'axis',
@@ -48,7 +50,7 @@ const lineOptions = ref<ECOption>({
     }
   },
   legend: {
-    data: ['下载量', '注册数']
+    data: ['提问量', '图片量']
   },
   grid: {
     left: '3%',
@@ -71,7 +73,7 @@ const lineOptions = ref<ECOption>({
   series: [
     {
       color: '#8e9dff',
-      name: '下载量',
+      name: '提问量',
       type: 'line',
       smooth: true,
       stack: 'Total',
@@ -101,7 +103,7 @@ const lineOptions = ref<ECOption>({
     },
     {
       color: '#26deca',
-      name: '注册数',
+      name: '图片量',
       type: 'line',
       smooth: true,
       stack: 'Total',
@@ -179,6 +181,17 @@ const pieOptions = ref<ECOption>({
   ]
 }) as Ref<ECOption>;
 const { domRef: pieRef } = useEcharts(pieOptions);
+
+
+async function getAnalysisList() {
+	const { data } = await fetchAnalysisList(null, null, null);
+	if (data) {
+		analysisData.value = data;
+	}
+}
+onMounted(() => {
+	getAnalysisList();
+});
 </script>
 
 <style scoped></style>
