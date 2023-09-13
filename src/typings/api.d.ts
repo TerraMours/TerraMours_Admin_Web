@@ -258,3 +258,16 @@ declare namespace ApiPayManagement {
     vipTime: number;
   }
 }
+/**
+ * 统计模块
+ */
+declare namespace ApiAnalysisManagement {
+  /**
+   * 数量统计
+   */
+  interface TotalAnalysis {
+    key: string;
+    total: number;
+    lastTotal: number;
+  }
+}

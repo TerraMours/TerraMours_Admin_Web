@@ -139,3 +139,13 @@ export const fetchOrderList = async (
   );
   return adapter(adapterOfFetchPageOrderList, data);
 };
+
+/** 数量统计 */
+export const fetchTotalAnalysis = async (dateType: number | null, startTime: string | null, endTime: string | null) => {
+  const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/TotalAnalysis', {
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
