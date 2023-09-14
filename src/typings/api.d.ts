@@ -270,4 +270,10 @@ declare namespace ApiAnalysisManagement {
     total: number;
     lastTotal: number;
   }
+  interface AllAnalysis {
+    key: string;
+    askCount: number;
+    userCount: number;
+    imageCount: number;
+  }
 }

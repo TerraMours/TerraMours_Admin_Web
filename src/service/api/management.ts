@@ -151,8 +151,28 @@ export const fetchTotalAnalysis = async (dateType: number | null, startTime: str
 };
 
 /** 数量统计 */
-export const fetchAnalysisList = async (dateType: number | null, startTime: string | null, endTime: string | null) => {
+export const fetchAnalysisList = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null,
+  analysisType: number | null
+) => {
   const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/AnalysisList', {
+    analysisType,
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
+
+/** 所有统计数量 */
+export const fetchAllAnalysisList = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null
+) => {
+  const data = await request.post<ApiAnalysisManagement.AllAnalysis[] | null>('/api/v1/Analysis/AllAnalysisList', {
     dateType,
     startTime,
     endTime
