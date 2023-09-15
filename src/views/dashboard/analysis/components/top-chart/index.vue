@@ -19,6 +19,7 @@
     </n-grid-item>
     <n-grid-item span="0:24 640:24 1024:10">
       <n-card :bordered="false" class="rounded-16px shadow-sm">
+        <n-select class="w-120px ml-auto" v-model:value="selectType" :options="Options" @update:value="handleUpdateValue"/>
         <div ref="lineRef" class="w-full h-360px"></div>
       </n-card>
     </n-grid-item>
@@ -36,6 +37,13 @@ import type { Ref } from 'vue';
 import { type ECOption, useEcharts } from '@/composables';
 import {fetchAllAnalysisList} from '@/service';
 import AllAnalysis = ApiAnalysisManagement.AllAnalysis;
+
+const selectType=ref(1);
+const Options: { label: string; value: number }[] = [
+  { label: '当天', value: 1 },
+  { label: '按月',value: 4 },
+  { label: '按天', value: 0 },
+]
 
 defineOptions({ name: 'DashboardAnalysisTopCard' });
 const analysisData=ref<AllAnalysis[]>([]);
@@ -191,10 +199,13 @@ watchEffect(() => {
   }
 });
 async function getAnalysisList() {
-	const { data } = await fetchAllAnalysisList(1, null, null);
+	const { data } = await fetchAllAnalysisList(selectType.value, null, null);
 	if (data) {
 		analysisData.value = data;
 	}
+}
+async function handleUpdateValue(){
+  await getAnalysisList();
 }
 
 onMounted(() => { setTimeout(() => { getAnalysisList(); }, 1000); });
