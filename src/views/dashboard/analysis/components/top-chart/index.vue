@@ -19,6 +19,7 @@
     </n-grid-item>
     <n-grid-item span="0:24 640:24 1024:10">
       <n-card :bordered="false" class="rounded-16px shadow-sm">
+        <n-select class="w-120px ml-auto" v-model:value="selectType" :options="Options" @update:value="handleUpdateValue"/>
         <div ref="lineRef" class="w-full h-360px"></div>
       </n-card>
     </n-grid-item>
@@ -31,12 +32,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import {onMounted, ref, watchEffect} from 'vue';
 import type { Ref } from 'vue';
 import { type ECOption, useEcharts } from '@/composables';
+import {fetchAllAnalysisList} from '@/service';
+import AllAnalysis = ApiAnalysisManagement.AllAnalysis;
+
+const selectType=ref(1);
+const Options: { label: string; value: number }[] = [
+  { label: '当天', value: 1 },
+  { label: '按月',value: 4 },
+  { label: '按天', value: 0 },
+]
 
 defineOptions({ name: 'DashboardAnalysisTopCard' });
-
+const analysisData=ref<AllAnalysis[]>([]);
 const lineOptions = ref<ECOption>({
   tooltip: {
     trigger: 'axis',
@@ -48,7 +58,7 @@ const lineOptions = ref<ECOption>({
     }
   },
   legend: {
-    data: ['下载量', '注册数']
+    data: ['提问量', '图片量']
   },
   grid: {
     left: '3%',
@@ -56,13 +66,12 @@ const lineOptions = ref<ECOption>({
     bottom: '3%',
     containLabel: true
   },
-  xAxis: [
-    {
+  xAxis: {
       type: 'category',
       boundaryGap: false,
       data: ['06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
     }
-  ],
+  ,
   yAxis: [
     {
       type: 'value'
@@ -71,7 +80,7 @@ const lineOptions = ref<ECOption>({
   series: [
     {
       color: '#8e9dff',
-      name: '下载量',
+      name: '提问量',
       type: 'line',
       smooth: true,
       stack: 'Total',
@@ -101,7 +110,7 @@ const lineOptions = ref<ECOption>({
     },
     {
       color: '#26deca',
-      name: '注册数',
+      name: '图片量',
       type: 'line',
       smooth: true,
       stack: 'Total',
@@ -179,6 +188,27 @@ const pieOptions = ref<ECOption>({
   ]
 }) as Ref<ECOption>;
 const { domRef: pieRef } = useEcharts(pieOptions);
+
+watchEffect(() => {
+  if (lineOptions.value.xAxis) {
+    (<any>lineOptions.value.xAxis).data = analysisData.value.map(m => m.key);
+  }
+  if (lineOptions.value.series && Array.isArray(lineOptions.value.series) && lineOptions.value.series.length > 0) {
+    lineOptions.value.series[0].data = analysisData.value.map(m => m.askCount);
+    lineOptions.value.series[1].data = analysisData.value.map(m => m.imageCount);
+  }
+});
+async function getAnalysisList() {
+	const { data } = await fetchAllAnalysisList(selectType.value, null, null);
+	if (data) {
+		analysisData.value = data;
+	}
+}
+async function handleUpdateValue(){
+  await getAnalysisList();
+}
+
+onMounted(() => { setTimeout(() => { getAnalysisList(); }, 1000); });
 </script>
 
 <style scoped></style>

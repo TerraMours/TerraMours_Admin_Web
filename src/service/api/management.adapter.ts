@@ -202,7 +202,32 @@ export function adapterOfFetchPagePromptOptionList(
   };
   return PageData;
 }
+/**
+ * 订单列表
+ * @param data
+ * @returns
+ */
+export function adapterOfFetchPageOrderList(
+  data: ApiPayManagement.PageData<ApiPayManagement.Order> | null
+): ApiPayManagement.PageData<PayManagement.Order> | null {
+  if (!data) return null;
+  const items = data.items.map((item, index) => {
+    const role: PayManagement.Order = {
+      index: index + 1,
+      key: item.id,
+      ...item
+    };
 
+    return role;
+  });
+  const PageData: ApiPayManagement.PageData<PayManagement.Order> = {
+    items,
+    page: data.page,
+    pageSize: data.pageSize,
+    total: data.total
+  };
+  return PageData;
+}
 /**
  * 商品分类
  * @param data

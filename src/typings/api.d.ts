@@ -208,6 +208,12 @@ declare namespace ApiGptManagement {
 }
 /** 支付模块 */
 declare namespace ApiPayManagement {
+  interface PageData<T> {
+    items: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }
   /** 商品 */
   interface Product {
     id: number;
@@ -222,10 +228,52 @@ declare namespace ApiPayManagement {
     vipTime: number | null;
     imagePath: string | null | undefined;
   }
+
   /** 分类 */
   interface Category {
     id: number;
     name: string;
     description: string;
+  }
+
+  /**
+   * 订单
+   */
+  interface Order {
+    id: number;
+    orderId: string;
+    tradeNo: string;
+    productId: 0;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    imagePath: string;
+    userId: string;
+    status: string;
+    createdTime: Date;
+    paidTime: Date;
+    isVIP: boolean;
+    vipLevel: number;
+    vipTime: number;
+  }
+}
+/**
+ * 统计模块
+ */
+declare namespace ApiAnalysisManagement {
+  /**
+   * 数量统计
+   */
+  interface TotalAnalysis {
+    key: string;
+    total: number;
+    lastTotal: number;
+  }
+  interface AllAnalysis {
+    key: string;
+    askCount: number;
+    userCount: number;
+    imageCount: number;
   }
 }

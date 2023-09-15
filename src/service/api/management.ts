@@ -11,7 +11,8 @@ import {
   adapterOfFetchPagePromptOptionList,
   adapterAllCategoryList,
   adapterAllProductList,
-  adapterOfFetchPageAllImageList
+  adapterOfFetchPageAllImageList,
+  adapterOfFetchPageOrderList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -124,4 +125,57 @@ export const fetchAllCategoryList = async () => {
 export const fetchAllProductList = async () => {
   const data = await request.get<ApiPayManagement.Product[] | null>('/api/v1/Product/GetAllProductList');
   return adapter(adapterAllProductList, data);
+};
+
+/** 获取聊天记录列表 */
+export const fetchOrderList = async (
+  queryString: string | null,
+  pageIndex: number | undefined,
+  pageSize: number | undefined
+) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiPayManagement.Order> | null>(
+    '/api/v1/AliPay/OrderList',
+    { queryString, pageIndex, pageSize }
+  );
+  return adapter(adapterOfFetchPageOrderList, data);
+};
+
+/** 数量统计 */
+export const fetchTotalAnalysis = async (dateType: number | null, startTime: string | null, endTime: string | null) => {
+  const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/TotalAnalysis', {
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
+
+/** 数量统计 */
+export const fetchAnalysisList = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null,
+  analysisType: number | null
+) => {
+  const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/AnalysisList', {
+    analysisType,
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
+
+/** 所有统计数量 */
+export const fetchAllAnalysisList = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null
+) => {
+  const data = await request.post<ApiAnalysisManagement.AllAnalysis[] | null>('/api/v1/Analysis/AllAnalysisList', {
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
 };

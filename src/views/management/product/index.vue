@@ -11,10 +11,6 @@
             <icon-ic-round-delete class="mr-4px text-20px" />
             删除
           </n-button>
-          <!-- <n-button type="success">
-            <icon-uil:export class="mr-4px text-20px" />
-            导出Excel
-          </n-button> -->
         </n-space>
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -25,7 +21,7 @@
       </n-space>
 			<n-space class="pb-12px" justify='end'>
 				<n-input-group>
-					<n-input v-model:value="queryString" placeholder="请输入 名称/描述" size="large"/>
+					<n-input v-model:value="queryString" placeholder="请输入 名称/描述" size="large" clearable/>
 				</n-input-group>
 			</n-space>
       <n-data-table :columns="columns" :data="dataSource" :loading="loading" :pagination="pagination" />

@@ -22,7 +22,7 @@
       </n-space>
 			<n-space class="pb-12px" justify='end'>
 				<n-input-group>
-					<n-input v-model:value="queryString" placeholder="请输入 名称/邮箱/手机号" size="large"/>
+					<n-input v-model:value="queryString" placeholder="请输入 名称/邮箱/手机号" size="large" clearable/>
 				</n-input-group>
 			</n-space>
       <n-data-table :columns="columns" :data="dataSource" :loading="loading" :pagination="pagination" />
