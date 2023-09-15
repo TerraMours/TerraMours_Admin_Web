@@ -85,7 +85,6 @@ const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
   {
       type: 'expand',
 			title: '展开',
-			width: 5,
       renderExpand: (rowData) => {
 				return <n-image src={rowData.imagUrl}></n-image>;
       }
@@ -94,32 +93,35 @@ const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
     key: 'index',
     title: '序号',
     align: 'center',
-		width: 5,
   },
 	{
-		key: 'userId',
+		key: 'userName',
 		title: '用户',
 		align: 'center',
-		width: 5,
 	},
   {
     key: 'modelType',
     title: '模型类型',
     align: 'center',
-		width: 5,
+    render: row => {
+      switch (row.modelType) {
+        case 0:
+          return <n-tag type="success">CHATGPT</n-tag>;
+        default:
+          return <n-tag type="success">SD</n-tag>;
+      }
+    }
   },
   {
     key: 'model',
     title: '模型',
     align: 'center',
-		width: 5,
   },
   {
     key: 'prompt',
     title: '提示词',
     align: 'center',
     resizable: true,
-		width: 30,
     ellipsis: {
       tooltip: true
     }
@@ -129,7 +131,6 @@ const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
 		title: '翻译文本',
 		align: 'center',
 		resizable: true,
-		width: 30,
 		ellipsis: {
 			tooltip: true
 		}
@@ -138,7 +139,6 @@ const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
     key: 'createDate',
     title: '创建时间',
     align: 'center',
-		width: 20,
 		render: (rowData) => {
 			const date = new Date(rowData.createDate);
 			const formattedDate = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
@@ -151,7 +151,6 @@ const columns: Ref<DataTableColumns<GptManagement.Image>> = ref([
 		key: 'isPublic',
 		title: '是否公开',
 		align: 'center',
-		width: 10,
 		render: row => {
 			return <n-switch v-model:value={row.isPublic} on-update:value={(value: boolean) =>{row.isPublic=value;
 				PublicChange(row.imageRecordId,value)}}></n-switch>;

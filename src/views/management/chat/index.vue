@@ -80,7 +80,6 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
   {
       type: 'expand',
 			title: '展开',
-			width: 1,
       renderExpand: (rowData) => {
         return `${rowData.message}`
       }
@@ -89,26 +88,22 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     key: 'index',
     title: '序号',
     align: 'center',
-		width: 5,
   },
   {
-    key: 'userId',
+    key: 'userName',
     title: '发起用户',
     align: 'center',
-		width: 5,
   },
   {
     key: 'role',
     title: '角色',
     align: 'center',
-		width: 5,
   },
   {
     key: 'message',
     title: '消息',
     align: 'center',
     resizable: true,
-		width: 30,
     ellipsis: {
       tooltip: true
     }
@@ -117,7 +112,6 @@ const columns: Ref<DataTableColumns<GptManagement.Chat>> = ref([
     key: 'createDate',
     title: '创建时间',
     align: 'center',
-		width: 20,
 		render: (rowData) => {
 			const date = new Date(rowData.createDate);
 			const formattedDate = `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
