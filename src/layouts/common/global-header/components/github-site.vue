@@ -16,7 +16,7 @@ defineOptions({ name: 'GithubSite' });
 
 const theme = useThemeStore();
 function handleClickLink() {
-  window.open('https://github.com/honghuangdc/soybean-admin', '_blank');
+  window.open('https://github.com/TerraMours/TerraMours_Admin_Web', '_blank');
 }
 </script>
 

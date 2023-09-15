@@ -393,7 +393,7 @@ const buttonExample: ButtonExample[] = [
         props: {
           text: true,
           tag: 'a',
-          href: 'https://github.com/honghuangdc/soybean-admin',
+          href: 'https://github.com/TerraMours/TerraMours_Admin_Web',
           target: '_blank',
           type: 'primary'
         },
