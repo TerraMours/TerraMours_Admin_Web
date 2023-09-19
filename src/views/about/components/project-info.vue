@@ -8,7 +8,7 @@
         <n-tag type="primary">{{ latestBuildTime }}</n-tag>
       </n-descriptions-item>
       <n-descriptions-item label="Github地址">
-        <a class="text-primary" href="https://github.com/honghuangdc/soybean-admin" target="_blank">Github地址</a>
+        <a class="text-primary" href="https://github.com/TerraMours/TerraMours_Admin_Web" target="_blank">Github地址</a>
       </n-descriptions-item>
       <n-descriptions-item label="预览地址">
         <a class="text-primary" href="http://43.134.164.127:8089/" target="_blank">预览地址</a>

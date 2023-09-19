@@ -119,7 +119,7 @@ const columns: Ref<DataTableColumns<PayManagement.Order>> = ref([
         align: 'center',
     },
   {
-    key: 'userId',
+    key: 'userName',
     title: '发起用户',
     align: 'center',
   },

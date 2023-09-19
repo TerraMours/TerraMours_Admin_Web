@@ -124,6 +124,7 @@ declare namespace ApiGptManagement {
     role: string;
     message: string;
     userId: number;
+    userName: string;
     createDate: Date;
   }
   /** 图片记录 */
@@ -142,6 +143,7 @@ declare namespace ApiGptManagement {
     prompt?: string;
     size?: number;
     userId: number;
+    userName: string;
   }
 
   /** key池 管理 */
@@ -250,6 +252,7 @@ declare namespace ApiPayManagement {
     stock: number;
     imagePath: string;
     userId: string;
+    userName: string;
     status: string;
     createdTime: Date;
     paidTime: Date;
