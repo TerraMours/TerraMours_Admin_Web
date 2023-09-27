@@ -32,6 +32,29 @@
         </n-grid>
       </n-form>
       </n-card>
+			<n-card title="支付设置" :bordered="false" class="rounded-16px shadow-sm " style="margin-top: 20px;">
+					<n-switch v-model:value="updateAlipayDisabled" @update:value="handleAlipayChange">
+							<template #checked>
+									点击保存
+							</template>
+							<template #unchecked>
+									点击编辑
+							</template>
+					</n-switch>
+					<n-form ref="formRef" label-placement="left" :label-width="150" :model="alipayModel" :disabled="!updateAlipayDisabled" style="margin-top: 20px;">
+							<n-grid :cols="24" :x-gap="18">
+									<n-form-item-grid-item :span="24" label="商户id" path="host">
+											<n-input v-model:value="alipayModel.appId" />
+									</n-form-item-grid-item>
+									<n-form-item-grid-item  :span="24" label="支付宝公钥" path="port">
+											<n-input type="textarea" v-model:value="alipayModel.alipayPublicKey" />
+									</n-form-item-grid-item>
+									<n-form-item-grid-item :span="24" label="应用私钥" path="senderEmail">
+											<n-input type="textarea" v-model:value="alipayModel.appPrivateKey" />
+									</n-form-item-grid-item>
+							</n-grid>
+					</n-form>
+			</n-card>
       <n-card title="Gpt设置" :bordered="false" class="rounded-16px shadow-sm " style="margin-top: 20px;">
         <n-switch v-model:value="updateAiDisabled" @update:value="handleGptChange">
           <template #checked>
@@ -142,13 +165,22 @@
       </n-card>
     </div>
   </template>
-  
+
   <script setup lang="tsx">
   import { ref, onMounted  } from 'vue';
-  import { GetEmailSettings,GetOpenAIOptions,GetImagOptions,ChangeEmailSettings,ChangeOpenAIOptions,ChangeImagOptions } from '@/service';
+  import {
+      GetEmailSettings,
+      GetOpenAIOptions,
+      GetImagOptions,
+      ChangeEmailSettings,
+      ChangeOpenAIOptions,
+      ChangeImagOptions,
+      GetAlipayOptions, ChangeAlipayOptions
+  } from '@/service';
   const updateEmailDisabled=ref(false);
   const updateAiDisabled=ref(false);
   const updateImageDisabled=ref(false);
+  const updateAlipayDisabled=ref(false);
   const  formModel = ref<ApiGptManagement.Email>({
 	host:"",
     port:0,
@@ -165,7 +197,7 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     temperature:0.7,
     frequencyPenalty:0,
     presencePenalty:0,
-    chatModel:"gpt-3.5-turbo", 
+    chatModel:"gpt-3.5-turbo",
     topP:0.7,
     contextCount:2,
     maxQuestions:100,
@@ -181,7 +213,19 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     imagFileBaseUrl:"",
     sdOptions:[]
   });
- 
+  const  alipayModel = ref<ApiGptManagement.AlipayOptions>({
+      appId: "",
+      alipayPublicKey: "",
+      appPrivateKey: "",
+      serverUrl: "",
+      version: "",
+      signType: "",
+      encryptKey: "",
+      appPublicCert: "",
+      alipayPublicCert: "",
+      alipayRootCert: "",
+  });
+
   const removeItem = (index:number) => {
   openaiModel.value.openAI!.keyList.splice(index, 1);
 };
@@ -206,7 +250,7 @@ const addImageItem = () => {
         formModel.value=data;
     }
   }
-  
+
   async function GetOpenAIOption() {
     const { data } = await GetOpenAIOptions();
     if(data !=null && data.openAI !=null){
@@ -222,7 +266,14 @@ const addImageItem = () => {
     }
     console.log(imageModel);
   }
-  
+
+  async function GetAlipayOption() {
+      const { data } = await GetAlipayOptions();
+      if(data !=null){
+          alipayModel.value=data;
+      }
+  }
+
   async function handleGptChange(value:Boolean) {
     if(!value){
         const { data } = await ChangeOpenAIOptions(openaiModel.value);
@@ -239,6 +290,14 @@ const addImageItem = () => {
         }
     }
   }
+  async function handleAlipayChange(value:Boolean) {
+      if(!value){
+          const { data } = await ChangeAlipayOptions(alipayModel.value);
+          if(data){
+              window.$message?.success('保存成功！');
+          }
+      }
+  }
   async function handleImageChange(value:Boolean) {
     if(!value){
         const { data } = await ChangeImagOptions(imageModel.value);
@@ -252,13 +311,13 @@ const addImageItem = () => {
     await GetEmailSetting();
     await GetOpenAIOption();
     await GetImageOption();
+    await GetAlipayOption();
   }
-  
+
 //   init();
   onMounted(() => {
     init();
 });
   </script>
-  
+
   <style scoped></style>
-  

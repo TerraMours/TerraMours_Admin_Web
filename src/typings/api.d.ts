@@ -207,6 +207,22 @@ declare namespace ApiGptManagement {
     baseUrl: string | null;
     negative_Prompt: string | null;
   }
+
+  /**
+   * 支付配置
+   */
+  interface AlipayOptions {
+    appId: string | null;
+    alipayPublicKey: string | null;
+    appPrivateKey: string | null;
+    serverUrl: string | null;
+    version: string | null;
+    signType: string | null;
+    encryptKey: string | null;
+    appPublicCert: string | null;
+    alipayPublicCert: string | null;
+    alipayRootCert: string | null;
+  }
 }
 /** 支付模块 */
 declare namespace ApiPayManagement {

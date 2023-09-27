@@ -345,6 +345,14 @@ export function GetEmailSettings(){
 export function ChangeEmailSettings(email:ApiGptManagement.Email){
   return request.post<boolean>('/api/v1/Settings/ChangeEmailSettings',email);
 }
+/**获取支付设置 */
+export function GetAlipayOptions(){
+  return request.get<ApiGptManagement.AlipayOptions>('/api/v1/Settings/GetAlipayOptions');
+}
+/**修改支付设置 */
+export function ChangeAlipayOptions(alipay:ApiGptManagement.AlipayOptions){
+  return request.post<boolean>('/api/v1/Settings/ChangeAlipayOptions',alipay);
+}
 
 /**获取AI设置 */
 export function GetOpenAIOptions(){
