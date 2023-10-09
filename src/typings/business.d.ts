@@ -78,6 +78,12 @@ declare namespace GptManagement {
     /** 表格的key（id） */
     key: number;
   }
+  interface Image extends ApiGptManagement.Image {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
   interface KeyOption extends ApiGptManagement.KeyOption {
     /** 序号 */
     index: number;
@@ -103,6 +109,12 @@ declare namespace PayManagement {
   }
   /** 分类 */
   interface Category extends ApiPayManagement.Category {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+  interface Order extends ApiPayManagement.Order {
     /** 序号 */
     index: number;
     /** 表格的key（id） */

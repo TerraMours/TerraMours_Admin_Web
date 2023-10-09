@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full overflow-hidden">
+  <div class="h-full overflow-y-auto">
     <n-card title="商品管理" :bordered="false" class="rounded-16px shadow-sm">
       <n-space class="pb-12px" justify="space-between">
         <n-space>
@@ -11,10 +11,6 @@
             <icon-ic-round-delete class="mr-4px text-20px" />
             删除
           </n-button>
-          <!-- <n-button type="success">
-            <icon-uil:export class="mr-4px text-20px" />
-            导出Excel
-          </n-button> -->
         </n-space>
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -23,14 +19,19 @@
           </n-button>
         </n-space>
       </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+			<n-space class="pb-12px" justify='end'>
+				<n-input-group>
+					<n-input v-model:value="queryString" placeholder="请输入 名称/描述" size="large" clearable/>
+				</n-input-group>
+			</n-space>
+      <n-data-table :columns="columns" :data="dataSource" :loading="loading" :pagination="pagination" />
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -40,7 +41,7 @@ import TableActionModal from './components/table-action-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
-
+const queryString = ref<string>('')
 const tableData = ref<PayManagement.Product[]>([]);
 function setTableData(data: PayManagement.Product[]) {
   tableData.value = data;
@@ -109,7 +110,13 @@ const columns: Ref<DataTableColumns<PayManagement.Product>> = ref([
   {
     key: 'isVIP',
     title: '是否VIP',
-    align: 'center'
+    align: 'center',
+		render: row => {
+			if (row.isVIP) {
+				return <n-tag type="success">是</n-tag>;
+			}
+			return <n-tag type="error">否</n-tag>;
+		}
   },
   {
     key: 'vipLevel',
@@ -179,7 +186,16 @@ async function handleDeleteTable(rowId: number) {
     }
   }
 }
-
+const dataSource= computed<PayManagement.Product[]>(() => {
+	const data = tableData.value;
+	const value = queryString.value
+	if (value && value !== '') {
+		return data.filter((item: PayManagement.Product) => {
+			return item.name?.includes(value) || item.description?.includes(value)
+		})
+	}
+	return data
+})
 function init() {
   getTableData();
 }

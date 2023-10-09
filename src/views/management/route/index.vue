@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full overflow-hidden">
+  <div class="h-full overflow-y-auto">
     <n-card title="菜单管理" :bordered="false" class="rounded-16px shadow-sm">
       <n-space class="pb-12px" justify="space-between">
         <n-space>
@@ -23,14 +23,19 @@
           </n-button>
         </n-space>
       </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+			<n-space class="pb-12px" justify='end'>
+				<n-input-group>
+					<n-input v-model:value="queryString" placeholder="请输入 名称/url" size="large" clearable/>
+				</n-input-group>
+			</n-space>
+      <n-data-table :columns="columns" :data="dataSource" :loading="loading" :pagination="pagination" />
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -41,7 +46,7 @@ import type { ModalType } from './components/table-action-modal.vue';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
-
+const queryString = ref<string>('')
 const tableData = ref<UserManagement.Menu[]>([]);
 function setTableData(data: UserManagement.Menu[]) {
   tableData.value = data;
@@ -184,6 +189,16 @@ const pagination: PaginationProps = reactive({
   }
 });
 
+const dataSource= computed<UserManagement.Menu[]>(() => {
+	const data = tableData.value;
+	const value = queryString.value
+	if (value && value !== '') {
+		return data.filter((item: UserManagement.Menu) => {
+			return item.menuName?.includes(value) || item.menuUrl?.includes(value)
+		})
+	}
+	return data
+})
 function init() {
   getTableData();
 }

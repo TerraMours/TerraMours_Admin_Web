@@ -124,8 +124,28 @@ declare namespace ApiGptManagement {
     role: string;
     message: string;
     userId: number;
+    userName: string;
     createDate: Date;
   }
+  /** 图片记录 */
+  interface Image {
+    collectCount: number;
+    createDate: Date;
+    forwardCount: number;
+    imagUrl: string;
+    imageRecordId: number;
+    ip: string;
+    isPublic: boolean;
+    likeCount: number;
+    model: string;
+    modelType?: number;
+    pranslatePrompt?: string;
+    prompt?: string;
+    size?: number;
+    userId: number;
+    userName: string;
+  }
+
   /** key池 管理 */
   interface KeyOption {
     keyId: number;
@@ -187,9 +207,31 @@ declare namespace ApiGptManagement {
     baseUrl: string | null;
     negative_Prompt: string | null;
   }
+
+  /**
+   * 支付配置
+   */
+  interface AlipayOptions {
+    appId: string | null;
+    alipayPublicKey: string | null;
+    appPrivateKey: string | null;
+    serverUrl: string | null;
+    version: string | null;
+    signType: string | null;
+    encryptKey: string | null;
+    appPublicCert: string | null;
+    alipayPublicCert: string | null;
+    alipayRootCert: string | null;
+  }
 }
 /** 支付模块 */
 declare namespace ApiPayManagement {
+  interface PageData<T> {
+    items: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }
   /** 商品 */
   interface Product {
     id: number;
@@ -204,10 +246,53 @@ declare namespace ApiPayManagement {
     vipTime: number | null;
     imagePath: string | null | undefined;
   }
+
   /** 分类 */
   interface Category {
     id: number;
     name: string;
     description: string;
+  }
+
+  /**
+   * 订单
+   */
+  interface Order {
+    id: number;
+    orderId: string;
+    tradeNo: string;
+    productId: 0;
+    name: string;
+    description: string;
+    price: number;
+    stock: number;
+    imagePath: string;
+    userId: string;
+    userName: string;
+    status: string;
+    createdTime: Date;
+    paidTime: Date;
+    isVIP: boolean;
+    vipLevel: number;
+    vipTime: number;
+  }
+}
+/**
+ * 统计模块
+ */
+declare namespace ApiAnalysisManagement {
+  /**
+   * 数量统计
+   */
+  interface TotalAnalysis {
+    key: string;
+    total: number;
+    lastTotal: number;
+  }
+  interface AllAnalysis {
+    key: string;
+    askCount: number;
+    userCount: number;
+    imageCount: number;
   }
 }

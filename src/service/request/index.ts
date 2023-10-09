@@ -1,12 +1,13 @@
 import { getServiceEnvConfig } from '~/.env-config';
 import { createRequest } from './request';
 
-const { url, proxyPattern } = getServiceEnvConfig(import.meta.env);
+const { url } = getServiceEnvConfig(import.meta.env);
 
-const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
+const htmlElement = document.querySelector('html');
+const envBaseUrl = htmlElement ? htmlElement.getAttribute('env_now') : null;
+// 优先获取环境变量中的值，没有传再获取envconfig的值
+export const baseUrl = envBaseUrl !== null ? envBaseUrl : url;
 
-export const baseUrl = isHttpProxy ? proxyPattern : url;
-
-export const request = createRequest({ baseURL: isHttpProxy ? proxyPattern : url });
+export const request = createRequest({ baseURL: envBaseUrl !== null ? envBaseUrl : url });
 
 export const mockRequest = createRequest({ baseURL: '/mock' });

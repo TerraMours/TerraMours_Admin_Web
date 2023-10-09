@@ -1,6 +1,6 @@
 <template>
-  <div class="h-full overflow-hidden">
-    <n-card title="用户管理" :bordered="false" class="rounded-16px shadow-sm">
+  <div class="h-full overflow-y-auto">
+    <n-card  :bordered="false" class="rounded-16px shadow-sm">
       <n-space class="pb-12px" justify="space-between">
         <n-space>
           <n-button type="primary" @click="handleAddTable">
@@ -11,10 +11,6 @@
             <icon-ic-round-delete class="mr-4px text-20px" />
             删除
           </n-button>
-          <!-- <n-button type="success">
-            <icon-uil:export class="mr-4px text-20px" />
-            导出Excel
-          </n-button> -->
         </n-space>
         <n-space align="center" :size="18">
           <n-button size="small" type="primary" @click="getTableData">
@@ -24,14 +20,19 @@
           <column-setting v-model:columns="columns" />
         </n-space>
       </n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+			<n-space class="pb-12px" justify='end'>
+				<n-input-group>
+					<n-input v-model:value="queryString" placeholder="请输入 名称/邮箱/手机号" size="large" clearable/>
+				</n-input-group>
+			</n-space>
+      <n-data-table :columns="columns" :data="dataSource" :loading="loading" :pagination="pagination" />
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -44,6 +45,7 @@ import ColumnSetting from './components/column-setting.vue';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
+const queryString = ref<string>('')
 
 const tableData = ref<UserManagement.User[]>([]);
 function setTableData(data: UserManagement.User[]) {
@@ -69,7 +71,8 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'index',
     title: '序号',
-    align: 'center'
+    align: 'center',
+		sorter: (row1, row2) => row1.userId - row2.userId
   },
   {
     key: 'userEmail',
@@ -89,7 +92,8 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'balance',
     title: '余额',
-    align: 'center'
+    align: 'center',
+		sorter: (row1, row2) => row1.balance - row2.balance
   },
   {
     key: 'gender',
@@ -191,7 +195,16 @@ const pagination: PaginationProps = reactive({
     pagination.page = 1;
   }
 });
-
+const dataSource= computed<UserManagement.User[]>(() => {
+	const data = tableData.value;
+	const value = queryString.value
+	if (value && value !== '') {
+		return data.filter((item: UserManagement.User) => {
+			return item.userName?.includes(value) || item.userEmail?.includes(value)|| item.userPhoneNum?.includes(value)
+		})
+	}
+	return data
+})
 function init() {
   getTableData();
 }
