@@ -10,6 +10,10 @@
 
 [TerraMours Admin](https://github.com/TerraMours/TerraMours_Admin_Web) is a backend management system developed based on soybean-admin. The technology stack includes the latest popular front-end technologies like Vue3, Vite3, TypeScript, NaiveUI, Pinia, and UnoCSS, with built-in rich theme configurations, and has high code standards. It's ready to use and can also be used for learning and reference.
 
+TerraMours is a practical project that implements user login and features such as multilingual model chat based on SK, multimodal image generation based on chatgpt and SD. The management side includes data dashboards, chat record management, image record management, user management, and system configuration.
+
+Official website: https://terramours.site/
+
 ## Features
 
 - **Latest Popular Technology Stack**: Develop using cutting-edge front-end technologies like Vue3/Vite, and use the efficient npm package manager pnpm
@@ -18,10 +22,22 @@
 - **Code Standards**: Rich standard plugins and high code standards
 
 ## Developed Features
-- **Chat Records**: Manage chat records and query user session information. (Todo: 1. Export function 2. Create fine-tuning model).
-- **Sensitive Word Management**: Manage sensitive words, customize sensitive word filtering, and enhance system security.
-- **Key Pool Management**: Manage key pools, support administrators to add multiple keys to form a key pool, and perform polling when calling AI interfaces to enhance system stability.
-- **System Prompts**: Add various role prompts to help users better use AI for conversations.
+- **Data Dashboard**: Displays multiple data statistics that include several data types most important to management personnel. The charts present statistics on chat and drawing counts across multiple dimensions, divided into three dimensions: daily (segmented by hour), daily, and monthly. The following is the data content for daily statistics.
+- **System Management**:
+  - **Email Service Configuration**: Configures the API service parameters for system emails used for sending verification codes via email.
+  - **GPT Settings**: Configures the proxy address, pricing plan, interface parameters, and KEY pool configuration for GPT.
+  - **Image Service Address**: Configures the service address for AI image drawing.
+- **Chat Records**: Manages chat records and queries user session information. (todo: 1. Export function, 2. Create fine-tuning model)
+- **Sensitive Word Management**: Manages sensitive words and customizes word filtering to enhance system security.
+- **Key Pool Management**: Manages the Key pool, allowing administrators to add multiple keys to form a Key pool for improved stability by using a round-robin approach when calling the AI interface.
+- **System Prompt Words**: Provides system prompt words for various roles, enabling users to use AI conversation more effectively.
+- **Drawing Records**: View the generation records of images in the system.
+- **Menu Management**: Implements dynamic configuration of menus in the backend management system. The menu management interface allows setting menus, and the backend API includes basic menu options during initialization.
+- **Role Management**: Controls roles in the backend management system. The default roles include Super Administrator and Regular User.
+- **User Management**: Manages registered users in the system.
+- **Product Management - Product Categories**: Sets the type and classification information for products to facilitate product management.
+- **Product Management - Product List**: Sets product information.
+- **Order List**: View generated orders.
 
 ## Online Preview
 
@@ -84,11 +100,136 @@ docker run --name terramoursweb -p 80:80 -d terramoursweb/terramoursweb:v0.9.6
 
 Open your local browser and go to `http://localhost`
 
+
+
+## Quick Setup
+
+### 1. Quick setup of AI chat and drawing system based on docker-compose
+
+#### 1. Create a new empty file named docker-compose.yml
+
+Create a new empty file named docker-compose.yml and paste the following contents into the file, then save it.
+
+```dockerfile
+version: "3.9"
+services:
+  redis:
+    image: redis
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - server
+
+  postgres:
+    image: postgres
+    container_name: postgres_container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=terramours1024
+      - POSTGRES_DB=TerraMoursGpt
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - server
+  server:
+    image: raokun88/terramours_gpt_server:latest
+    container_name: terramours_gpt_server
+    environment:
+      - TZ=Asia/Shanghai
+      - ENV_DB_CONNECTION=Host=postgres;Port=5432;Userid=postgres;password=terramours1024;Database=TerraMoursGpt;
+      - ENV_REDIS_HOST=redis:6379
+    volumes:
+      # 图片挂载地址，将容器中的图片挂载出来
+      - F:\Docker\terra\server\images:/app/images
+      # 可挂载自定义的配置文件快速进行系统配置
+      #- F:\Docker\terra\server/appsettings.json:/app/appsettings.json
+    ports:
+      - "3116:80"
+    restart: always
+    networks:
+      - server
+    depends_on:
+      - postgres
+      - redis
+  admin:
+    image: raokun88/terramours_gpt_admin:latest
+    container_name: terramoursgptadmin
+    environment:
+      - VUE_APP_API_BASE_URL=http://127.0.0.1:3116
+    ports:
+      - "3226:8081"
+    restart: always
+    networks:
+      - server
+
+  web:
+    image: raokun88/terramours_gpt_web:latest
+    container_name: terramoursgptweb
+    environment:
+      - VUE_APP_API_BASE_URL=http://127.0.0.1:3116
+    ports:
+      - "3216:8081"
+    restart: always
+    networks:
+      - server
+    
+networks:
+  server:
+    driver:
+      bridge
+
+```
+
+#### 2. Upload the docker-compose file to the server
+
+Upload the docker-compose file to the server using XFTP, the FTP client I am using.
+
+#### 3. Execute Docker command to build the docker-compose
+
+```shell
+docker-compose up
+```
+
+### 2. Build the front-end project using Docker command
+
+In addition to using docker-compose, we have also uploaded the front-end image to Docker Hub. You can quickly build the front-end project using the Docker command. Execute the following command on the server:
+
+```shell
+docker run --name terramoursgptadmin -p 3226:8081 -e VUE_APP_API_BASE_URL=http://127.0.0.1:3116 --restart always -d raokun88/terramours_gpt_admin:latest //Replace VUE_APP_API_BASE_URL with the corresponding backend API address
+```
+
+**Note: Replace VUE_APP_API_BASE_URL with the corresponding backend API address**
+
+
+
 ## Browser Support
 
 Recommended to use the `Chrome 90+` browser for local development
 
 Supports modern browsers, not Internet Explorer
+
+
+
+## Project Screenshots
+
+### User Interface
+
+![image-20231009165939032](./img/image-20231009165939032.png)
+
+![image-20231009165948121](./img/image-20231009165948121.png)
+
+### Admin Interface
+
+![image-20231009170148439](./img/image-20231009170148439.png)
+
+![image-20231009170200187](./img/image-20231009170200187.png)
+
+![image-20231009170507536](./img/image-20231009170507536.png)
+
+
 
 ## Open-Source Authors
 
