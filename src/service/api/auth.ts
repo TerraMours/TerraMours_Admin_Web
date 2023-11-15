@@ -65,6 +65,18 @@ export function fetchRegister(userAccount: string,userPassword: string,repeatPas
 }
 
 /**
+ * 修改密码接口
+ * @param userAccount - 登录账号
+ * @param userPassword - 密码
+ * @param repeatPassword - 密码确认
+ * @param checkCode - 校验码
+ * @returns
+ */
+export function fetchChangePassword(userAccount: string,userPassword: string,repeatPassword: string,checkCode: string) {
+	return request.post<string>('/api/v1/Login/ChangePassword', { userAccount, userPassword,repeatPassword,checkCode});
+}
+
+/**
  * 删除用户
  * @param userId
  * @returns

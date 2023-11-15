@@ -181,7 +181,7 @@ declare namespace ApiGptManagement {
   }
   /** openai */
   interface OpenAI {
-    keyList: string[];
+    keyList: AKeyOption[];
     maxTokens: number | null;
     temperature: number | null;
     frequencyPenalty: number | null;
@@ -190,11 +190,14 @@ declare namespace ApiGptManagement {
     topP: number | null;
     contextCount: number | null;
     maxQuestions: number | null;
-    baseUrl: string;
-    gpt4Url: string;
-    gpt4Key: string;
-    textModel: string;
   }
+  interface AKeyOption {
+    key: string;
+    baseUrl: string;
+    isEnable: boolean;
+    modelTypes: string[]; // 将属性类型改为字符串数组
+  }
+
   /** 图片生成配置 */
   interface ImagOptions {
     imagePrice: number;

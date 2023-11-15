@@ -66,17 +66,8 @@
         </n-switch>
         <n-form  label-placement="left" :label-width="200" :model="openaiModel" :disabled="!updateAiDisabled" style="margin-top: 20px;">
         <n-grid :cols="24" :x-gap="18">
-          <n-form-item-grid-item :span="12" label="OPENAI代理地址" path="baseUrl">
-            <n-input v-if="openaiModel.openAI" v-model:value="openaiModel.openAI!.baseUrl" />
-          </n-form-item-grid-item>
           <n-form-item-grid-item :span="12" label="Token定价" path="TokenPrice">
             <n-input-number v-model:value="openaiModel.tokenPrice"></n-input-number>
-          </n-form-item-grid-item>
-          <n-form-item-grid-item :span="12" label="Gpt4Url" path="gpt4Url">
-            <n-input v-model:value="openaiModel.openAI!.gpt4Url" />
-          </n-form-item-grid-item>
-          <n-form-item-grid-item :span="12" label="Gpt4Key" path="gpt4Key">
-            <n-input v-model:value="openaiModel.openAI!.gpt4Key" />
           </n-form-item-grid-item>
           <n-form-item-grid-item :span="24" label="OpenAI参数配置" path="gpt4Key">
           </n-form-item-grid-item>
@@ -116,7 +107,12 @@
             :key="index"
             :label="`Key${index + 1}`"
             >
-            <n-input v-model:value="openaiModel.openAI!.keyList[ index]" clearable />
+            <n-input v-model:value="openaiModel.openAI!.keyList[ index].key" placeholder="输入key" clearable />
+            <n-input v-model:value="openaiModel.openAI!.keyList[ index].baseUrl" placeholder="输入代理地址，不使用代理：https://api.openai.com/" clearable />
+            <n-select v-model:value="openaiModel.openAI!.keyList[ index].modelTypes"
+              multiple
+              :options="Options"
+            ></n-select>
             <n-button style="margin-left: 12px" @click="removeItem(index)" :disabled="!updateAiDisabled">
                 删除
             </n-button>
@@ -201,10 +197,6 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     topP:0.7,
     contextCount:2,
     maxQuestions:100,
-    baseUrl:"",
-    gpt4Url:"",
-    gpt4Key:"",
-    textModel:"",
   },
     azureOpenAI:null,
   });
@@ -225,13 +217,20 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
       alipayPublicCert: "",
       alipayRootCert: "",
   });
-
+  const Options: { label: string; value: string,disabled: boolean}[] = [
+    { label: 'ChatGpt', value: 'ChatGpt',disabled:true },
+    { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo',disabled:false },
+    { label: 'gpt-3.5-turbo-16k',value: 'gpt-3.5-turbo-16k',disabled:false },
+    { label: 'gpt-4', value: 'gpt-4',disabled:false },
+    { label: 'ChatGLM', value: 'ChatGLM',disabled:true },
+    { label: 'ChatGLM', value: 'ChatGLM',disabled:false },
+  ]
   const removeItem = (index:number) => {
   openaiModel.value.openAI!.keyList.splice(index, 1);
 };
 
 const addItem = () => {
-  openaiModel.value.openAI!.keyList.push('');
+  openaiModel.value.openAI!.keyList.push({key:'',baseUrl:'',isEnable:true,modelTypes:[]});
 };
 
 const removeImageItem = (index:number) => {
