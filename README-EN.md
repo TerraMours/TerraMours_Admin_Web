@@ -102,7 +102,7 @@ Open your local browser and go to `http://localhost`
 
 
 
-## Quick Setup
+## 2.Quick Setup
 
 ### 1. Quick setup of AI chat and drawing system based on docker-compose
 
@@ -110,7 +110,8 @@ Open your local browser and go to `http://localhost`
 
 Create a new empty file named docker-compose.yml and paste the following contents into the file, then save it.
 
-```dockerfile
+
+```yaml
 version: "3.9"
 services:
   redis:
@@ -134,6 +135,18 @@ services:
     restart: always
     networks:
       - server
+
+  seq:
+    image: datalust/seq
+    container_name: seq_container
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    restart: always
+    networks:
+      - server
+
   server:
     image: raokun88/terramours_gpt_server:latest
     container_name: terramours_gpt_server
@@ -141,10 +154,11 @@ services:
       - TZ=Asia/Shanghai
       - ENV_DB_CONNECTION=Host=postgres;Port=5432;Userid=postgres;password=terramours1024;Database=TerraMoursGpt;
       - ENV_REDIS_HOST=redis:6379
+      - ENV_SEQ_HOST=http://<YOUR-SERVER-IP>:5341/
     volumes:
-      # 图片挂载地址，将容器中的图片挂载出来
-      - F:\Docker\terra\server\images:/app/images
-      # 可挂载自定义的配置文件快速进行系统配置
+      # Image mount address, mount images out of the container
+      - /path/terra/images:/app/images
+      # You can mount custom configuration files for quick system configuration
       #- F:\Docker\terra\server/appsettings.json:/app/appsettings.json
     ports:
       - "3116:80"
@@ -158,7 +172,7 @@ services:
     image: raokun88/terramours_gpt_admin:latest
     container_name: terramoursgptadmin
     environment:
-      - VUE_APP_API_BASE_URL=http://127.0.0.1:3116
+      - VUE_APP_API_BASE_URL=http://<YOUR-SERVER-IP>:3116
     ports:
       - "3226:8081"
     restart: always
@@ -169,13 +183,13 @@ services:
     image: raokun88/terramours_gpt_web:latest
     container_name: terramoursgptweb
     environment:
-      - VUE_APP_API_BASE_URL=http://127.0.0.1:3116
+      - VUE_APP_API_BASE_URL=http://<YOUR-SERVER-IP>:3116
     ports:
       - "3216:8081"
     restart: always
     networks:
       - server
-    
+
 networks:
   server:
     driver:
@@ -183,11 +197,23 @@ networks:
 
 ```
 
+##### Installation Notes
+
+1. Modify the yml file: Replace `<YOUR-SERVER-IP>` with the IP address of your server.<br/>
+2. Default admin account credentials: terramours@163.com terramours@163.com<br/>
+3. If there are system errors, use `seq` to view them. Access the following URL: `http://<YOUR-SERVER-IP>:5341/`<br/>
+4. In the seq logs, if you see "Initialization of the database successful," it means that the backend service has been successfully initialized. During the initial installation, there may be some error messages. It is recommended to restart the terramours_gpt_server container after the docker-compose installation is complete.<br/>
+5. For more service configurations, you can copy the appsettings.json file from the server's GitHub repository to the server and modify the configuration file by mounting it in the container.<br/>
+```
+# Mount your custom configuration file to perform system configuration quickly
+- /path/terra/appsettings.json:/app/appsettings.json
+```
+
 #### 2. Upload the docker-compose file to the server
 
-Upload the docker-compose file to the server using XFTP, the FTP client I am using.
+Upload the docker-compose file to the server. I used XFTP for this purpose.
 
-#### 3. Execute Docker command to build the docker-compose
+#### 3. Execute the Docker command to build the docker-compose.
 
 ```shell
 docker-compose up
