@@ -102,7 +102,7 @@ Open your local browser and go to `http://localhost`
 
 
 
-## Quick Setup
+## 2.Quick Setup
 
 ### 1. Quick setup of AI chat and drawing system based on docker-compose
 
@@ -155,9 +155,9 @@ services:
       - ENV_REDIS_HOST=redis:6379
       - ENV_SEQ_HOST=http://<YOUR-SERVER-IP>:5341/
     volumes:
-      # 图片挂载地址，将容器中的图片挂载出来
+      # Image mount address, mount images out of the container
       - /path/terra/images:/app/images
-      # 可挂载自定义的配置文件快速进行系统配置
+      # You can mount custom configuration files for quick system configuration
       #- F:\Docker\terra\server/appsettings.json:/app/appsettings.json
     ports:
       - "3116:80"
@@ -197,23 +197,21 @@ networks:
 ```
 
 ##### Installation Notes
-
-1. Edit the yml file: Replace `<YOUR-SERVER-IP>` with your server's IP address.<br/>
+1. Modify the yml file: Replace `<YOUR-SERVER-IP>` with the IP address of your server.<br/>
 2. Default admin account credentials: terramours@163.com terramours@163.com<br/>
-3. If there are system errors, check the logs using seq. The log URL is: `http://<YOUR-SERVER-IP>:5341/`<br/>
-4. If the seq log displays "Database initialized successfully," it means the backend service has been initialized. There may be error messages during the initial installation. It is recommended to restart the terramours_gpt_server container after completing the docker-compose installation.<br/>
-5. For further service configuration, you can copy the appsettings.json file from the server repository and modify the file by mounting it in the container.<br/>
+3. If there are system errors, use `seq` to view them. Access the following URL: `http://<YOUR-SERVER-IP>:5341/`<br/>
+4. In the seq logs, if you see "Initialization of the database successful," it means that the backend service has been successfully initialized. During the initial installation, there may be some error messages. It is recommended to restart the terramours_gpt_server container after the docker-compose installation is complete.<br/>
+5. For more service configurations, you can copy the appsettings.json file from the server's GitHub repository to the server and modify the configuration file by mounting it in the container.<br/>
 ```
-# Mount custom configuration file for quick system configuration
+# Mount your custom configuration file to perform system configuration quickly
 - /path/terra/appsettings.json:/app/appsettings.json
 ```
 
-
 #### 2. Upload the docker-compose file to the server
 
-Upload the docker-compose file to the server using XFTP, the FTP client I am using.
+Upload the docker-compose file to the server. I used XFTP for this purpose.
 
-#### 3. Execute Docker command to build the docker-compose
+#### 3. Execute the Docker command to build the docker-compose.
 
 ```shell
 docker-compose up
