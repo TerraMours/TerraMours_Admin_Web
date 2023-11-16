@@ -110,7 +110,6 @@ Open your local browser and go to `http://localhost`
 
 Create a new empty file named docker-compose.yml and paste the following contents into the file, then save it.
 
-
 ```yaml
 version: "3.9"
 services:
@@ -198,7 +197,6 @@ networks:
 ```
 
 ##### Installation Notes
-
 1. Modify the yml file: Replace `<YOUR-SERVER-IP>` with the IP address of your server.<br/>
 2. Default admin account credentials: terramours@163.com terramours@163.com<br/>
 3. If there are system errors, use `seq` to view them. Access the following URL: `http://<YOUR-SERVER-IP>:5341/`<br/>

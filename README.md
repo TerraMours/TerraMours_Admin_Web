@@ -289,7 +289,7 @@ docker run --name terramoursgptadmin -p 3226:8081 -e VUE_APP_API_BASE_URL=http:/
   <div style="display:flex;">
   	<div style="padding-right:24px;">
   		<p>QQ交流群</p>
-      <img src="https://www.raokun.top/upload/2023/06/qq.png" style="width:200px" />
+      <img src="https://www.raokun.top/upload/2023/06/%E4%BA%A4%E6%B5%81%E7%BE%A4.png" style="width:200px" />
   	</div>
 		<div>
 			<p>添加本人微信，欢迎来技术交流，业务咨询</p>
