@@ -196,6 +196,7 @@ declare namespace ApiGptManagement {
     baseUrl: string;
     isEnable: boolean;
     modelTypes: string[]; // 将属性类型改为字符串数组
+    type: number;
   }
 
   /** 图片生成配置 */
