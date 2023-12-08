@@ -225,6 +225,7 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo',disabled:false },
     { label: 'gpt-3.5-turbo-16k',value: 'gpt-3.5-turbo-16k',disabled:false },
     { label: 'gpt-4', value: 'gpt-4',disabled:false },
+
     { label: 'ChatGLM', value: 'ChatGLM',disabled:true },
     { label: 'ChatGLM', value: 'ChatGLM',disabled:false },
       { label: '文心千帆', value: '文心千帆',disabled:true },
@@ -247,6 +248,9 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
       { label: 'qwen-max', value: 'qwen-max',disabled:false },
       { label: 'qwen-turbo', value: 'qwen-turbo',disabled:false },
       { label: 'qwen-plus', value: 'qwen-plus',disabled:false },
+      { label: 'stable diffusion', value: 'stable diffusion',disabled:true },
+      { label: '二次元', value: 'SD2D',disabled:false },
+      { label: '真人', value: 'SD3D',disabled:false },
   ]
   const ModelOptions: { label: string; value: number,disabled: boolean}[] = [
       { label: 'OpenAI', value: 1,disabled:false },
