@@ -66,7 +66,7 @@
         </n-switch>
         <n-form  label-placement="left" :label-width="200" :model="openaiModel" :disabled="!updateAiDisabled" style="margin-top: 20px;">
         <n-grid :cols="24" :x-gap="18">
-          <n-form-item-grid-item :span="12" label="Token定价" path="TokenPrice">
+          <n-form-item-grid-item :span="12" label="每1k Token定价" path="TokenPrice">
             <n-input-number v-model:value="openaiModel.tokenPrice"></n-input-number>
           </n-form-item-grid-item>
           <n-form-item-grid-item :span="24" label="OpenAI参数配置" path="gpt4Key">
@@ -140,25 +140,6 @@
           <n-form-item-grid-item :span="12" label="图片定价" path="port">
             <n-input-number v-model:value="imageModel.imagePrice" />
           </n-form-item-grid-item>
-          <n-form-item-grid-item :span="24" label="Stable Diffusion 配置：">
-            <n-space>
-                <n-button attr-type="button" @click="addImageItem" :disabled="!updateImageDisabled">
-                增加
-                </n-button>
-            </n-space>
-          </n-form-item-grid-item>
-          <n-form-item-grid-item :span="24"
-            v-for="(_,index) in imageModel.sdOptions"
-            :key="index"
-            :label="`API${index + 1}`"
-            >
-            <n-input placeholder="标签" v-model:value="imageModel.sdOptions[ index].label" clearable />
-            <n-input placeholder="Stable Diffusion API地址" v-model:value="imageModel.sdOptions[ index].baseUrl" clearable />
-            <n-input placeholder="反向描述词" v-model:value="imageModel.sdOptions[ index].negative_Prompt" clearable />
-            <n-button style="margin-left: 12px" @click="removeImageItem(index)" :disabled="!updateImageDisabled">
-                删除
-            </n-button>
-         </n-form-item-grid-item>
         </n-grid>
       </n-form>
       </n-card>
@@ -244,6 +225,7 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
       { label: 'ChatGLM2_6B_32K', value: 'chatglm2_6b_32k',disabled:false },
       { label: 'XuanYuan_70B_Chat_4bit', value: 'xuanyuan_70b_chat',disabled:false },
       { label: 'AquilaChat_7B', value: 'aquilachat_7b',disabled:false },
+      { label: 'Stable-Diffusion-XL', value: 'Stable-Diffusion-XL',disabled:false },
       { label: '同义千问', value: '同义千问',disabled:true },
       { label: 'qwen-max', value: 'qwen-max',disabled:false },
       { label: 'qwen-turbo', value: 'qwen-turbo',disabled:false },
@@ -265,16 +247,6 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
 
 const addItem = () => {
   openaiModel.value.openAI!.keyList.push({key:'',baseUrl:'',isEnable:true,modelTypes:[],type:1});
-};
-
-const removeImageItem = (index:number) => {
-    imageModel.value.sdOptions.splice(index, 1);
-};
-
-const addImageItem = () => {
-    imageModel.value.sdOptions.push({label:"",
-    baseUrl:"",
-    negative_Prompt:""});
 };
 
   async function GetEmailSetting() {
