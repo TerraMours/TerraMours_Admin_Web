@@ -1,31 +1,43 @@
 <template>
   <n-grid :x-gap="16" :y-gap="16" :item-responsive="true">
-    <n-grid-item span="0:24 640:24 1024:6">
+    <n-grid-item span="0:24 640:24 1024:8">
       <n-card :bordered="false" class="rounded-16px shadow-sm">
         <div class="w-full h-360px py-12px">
-          <h3 class="text-16px font-bold">Dashboard</h3>
-          <p class="text-#aaa">Overview Of Lasted Month</p>
+          <h3 class="text-16px font-bold">销售统计</h3>
+          <p class="text-#aaa">统计最近一个月数据</p>
           <h3 class="pt-32px text-24px font-bold">
             <count-to prefix="$" :start-value="0" :end-value="7754" />
           </h3>
-          <p class="text-#aaa">Current Month Earnings</p>
+          <p class="text-#aaa">本月销售额</p>
           <h3 class="pt-32px text-24px font-bold">
             <count-to :start-value="0" :end-value="1234" />
           </h3>
-          <p class="text-#aaa">Current Month Sales</p>
+          <p class="text-#aaa">本月订单数</p>
           <n-button class="mt-24px whitespace-pre-wrap" type="primary">Last Month Summary</n-button>
         </div>
       </n-card>
     </n-grid-item>
-    <n-grid-item span="0:24 640:24 1024:10">
+    <n-grid-item span="0:24 640:24 1024:8">
       <n-card :bordered="false" class="rounded-16px shadow-sm">
-        <n-select class="w-120px ml-auto" v-model:value="selectType" :options="Options" @update:value="handleUpdateValue"/>
+        <n-select class="w-120px ml-auto" v-model:value="askSelectType" :options="Options" @update:value="askHandleUpdateValue"/>
         <div ref="lineRef" class="w-full h-360px"></div>
       </n-card>
     </n-grid-item>
     <n-grid-item span="0:24 640:24 1024:8">
       <n-card :bordered="false" class="rounded-16px shadow-sm">
         <div ref="pieRef" class="w-full h-360px"></div>
+      </n-card>
+    </n-grid-item>
+    <n-grid-item span="0:24 640:24 1024:8">
+      <n-card :bordered="false" class="rounded-16px shadow-sm">
+        <n-select class="w-120px ml-auto" v-model:value="tokenSelectType" :options="Options" @update:value="getTokenList"/>
+        <div ref="tokenRef" class="w-full h-360px"></div>
+      </n-card>
+    </n-grid-item>
+    <n-grid-item span="0:24 640:24 1024:8">
+      <n-card :bordered="false" class="rounded-16px shadow-sm">
+        <n-select class="w-120px ml-auto" v-model:value="useSelectType" :options="Options" @update:value="getUseList"/>
+        <div ref="useRef" class="w-full h-360px"></div>
       </n-card>
     </n-grid-item>
   </n-grid>
@@ -35,10 +47,13 @@
 import {onMounted, ref, watchEffect} from 'vue';
 import type { Ref } from 'vue';
 import { type ECOption, useEcharts } from '@/composables';
-import {fetchAllAnalysisList} from '@/service';
+import {fetchAllAnalysisList, fetchAnalysisList} from '@/service';
 import AllAnalysis = ApiAnalysisManagement.AllAnalysis;
+import TotalAnalysis = ApiAnalysisManagement.TotalAnalysis;
 
-const selectType=ref(1);
+const askSelectType=ref(1);
+const tokenSelectType=ref(1);
+const useSelectType=ref(1);
 const Options: { label: string; value: number }[] = [
   { label: '当天', value: 1 },
   { label: '按月',value: 4 },
@@ -47,6 +62,8 @@ const Options: { label: string; value: number }[] = [
 
 defineOptions({ name: 'DashboardAnalysisTopCard' });
 const analysisData=ref<AllAnalysis[]>([]);
+const tokenData=ref<TotalAnalysis[]>([]);
+const useData=ref<TotalAnalysis[]>([]);
 const lineOptions = ref<ECOption>({
   tooltip: {
     trigger: 'axis',
@@ -142,6 +159,84 @@ const lineOptions = ref<ECOption>({
 }) as Ref<ECOption>;
 const { domRef: lineRef } = useEcharts(lineOptions);
 
+const tokenOptions = ref<ECOption>({
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross',
+      label: {
+        backgroundColor: '#6a7985'
+      }
+    }
+  },
+  xAxis: {
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  legend: {
+    data: ['token消耗量']
+  },
+  series: [
+    {
+      name: 'token消耗量',
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: 'bar',
+      color: '#8378ea',
+      showBackground: true,
+      barGap: 100,
+      itemStyle: {
+        borderRadius: [40, 40, 0, 0]
+      },
+      backgroundStyle: {
+        color: 'rgba(180, 180, 180, 0.2)'
+      }
+    }
+  ]
+}) as Ref<ECOption>;
+const { domRef: tokenRef } = useEcharts(tokenOptions);
+
+const useOptions = ref<ECOption>({
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross',
+      label: {
+        backgroundColor: '#6a7985'
+      }
+    }
+  },
+  xAxis: {
+    type: 'category',
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  },
+  yAxis: {
+    type: 'value'
+  },
+  legend: {
+    data: ['上线人数']
+  },
+  series: [
+    {
+      name: '上线人数',
+      data: [120, 200, 150, 80, 70, 110, 130],
+      type: 'bar',
+      color: '#8378ea',
+      showBackground: true,
+      barGap: 100,
+      itemStyle: {
+        borderRadius: [40, 40, 0, 0]
+      },
+      backgroundStyle: {
+        color: 'rgba(180, 180, 180, 0.2)'
+      }
+    }
+  ]
+}) as Ref<ECOption>;
+const { domRef: useRef } = useEcharts(useOptions);
+
 const pieOptions = ref<ECOption>({
   tooltip: {
     trigger: 'item'
@@ -197,18 +292,48 @@ watchEffect(() => {
     lineOptions.value.series[0].data = analysisData.value.map(m => m.askCount);
     lineOptions.value.series[1].data = analysisData.value.map(m => m.imageCount);
   }
+  //token
+  if (tokenOptions.value.xAxis) {
+    (<any>tokenOptions.value.xAxis).data = tokenData.value.map(m => m.key);
+  }
+  if (tokenOptions.value.series && Array.isArray(tokenOptions.value.series) && tokenOptions.value.series.length > 0) {
+    tokenOptions.value.series[0].data = tokenData.value.map(m => m.total);
+  }
+  //USE
+  if (useOptions.value.xAxis) {
+    (<any>useOptions.value.xAxis).data = useData.value.map(m => m.key);
+  }
+  if (useOptions.value.series && Array.isArray(useOptions.value.series) && useOptions.value.series.length > 0) {
+    useOptions.value.series[0].data = useData.value.map(m => m.total);
+  }
 });
 async function getAnalysisList() {
-	const { data } = await fetchAllAnalysisList(selectType.value, null, null);
+	const { data } = await fetchAllAnalysisList(askSelectType.value, null, null);
 	if (data) {
 		analysisData.value = data;
 	}
 }
-async function handleUpdateValue(){
+async function getTokenList() {
+  const { data } = await fetchAnalysisList(tokenSelectType.value, null, null,6);
+  if (data) {
+    useData.value = data;
+  }
+}
+async function getUseList() {
+  const { data } = await fetchAnalysisList(tokenSelectType.value, null, null,1);
+  if (data) {
+    tokenData.value = data;
+  }
+}
+async function askHandleUpdateValue(){
   await getAnalysisList();
 }
 
-onMounted(() => { setTimeout(() => { getAnalysisList(); }, 1000); });
+onMounted(() => {
+  setTimeout(() => { getAnalysisList(); }, 1000);
+  getTokenList();
+  getUseList();
+});
 </script>
 
 <style scoped></style>
