@@ -200,7 +200,7 @@ export function fetchAddRole(roleName:string | null){
   * @returns
   */
  export function fetchGetRoleSelect(){
-  return request.post<ApiCommon.KeyValue[]>('api/v1/Menu/GetRoleSelect');
+  return request.get<ApiCommon.KeyValue[]>('api/v1/Role/GetRoleSelect');
 }
 
 /**

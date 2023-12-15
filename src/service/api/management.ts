@@ -166,6 +166,38 @@ export const fetchAnalysisList = async (
   return data;
 };
 
+/** 饼状图数量统计 */
+export const fetchPieAnalysisList = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null,
+  analysisType: number | null
+) => {
+  const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/PieAnalysisList', {
+    analysisType,
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
+
+/** 销售统计 */
+export const fetchSaleAnalysis = async (
+  dateType: number | null,
+  startTime: string | null,
+  endTime: string | null,
+  analysisType: number | null
+) => {
+  const data = await request.post<ApiAnalysisManagement.TotalAnalysis[] | null>('/api/v1/Analysis/SaleAnalysis', {
+    analysisType,
+    dateType,
+    startTime,
+    endTime
+  });
+  return data;
+};
+
 /** 所有统计数量 */
 export const fetchAllAnalysisList = async (
   dateType: number | null,
