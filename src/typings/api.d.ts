@@ -74,6 +74,8 @@ declare namespace ApiUserManagement {
     createDate: Date | null;
     /** 更新时间 */
     modifyDate: Date | null;
+    isAdmin: boolean;
+    isNewUser: boolean;
   }
   interface Menu {
     /** 菜单id */
@@ -176,6 +178,7 @@ declare namespace ApiGptManagement {
   /** AI配置 */
   interface OpenAIOptions {
     tokenPrice: number;
+    newUserBalance: number;
     openAI: OpenAI | null;
     azureOpenAI: null;
   }

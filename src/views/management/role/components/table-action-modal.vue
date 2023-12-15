@@ -6,6 +6,20 @@
           <n-input v-model:value="formModel.roleName" />
         </n-form-item-grid-item>
       </n-grid>
+      <n-grid>
+        <n-form-item-grid-item :span="12" label="系统管理员" path="isHome">
+          <n-switch v-model:value="formModel.isAdmin">
+            <template #checked>是</template>
+            <template #unchecked>否</template>
+          </n-switch>
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="12" label="默认新增用户角色" path="isHome">
+          <n-switch v-model:value="formModel.isNewUser">
+            <template #checked>是</template>
+            <template #unchecked>否</template>
+          </n-switch>
+        </n-form-item-grid-item>
+      </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
         <n-button class="w-72px" @click="closeModal">取消</n-button>
         <n-button class="w-72px" type="primary" @click="handleSubmit">确定</n-button>
@@ -70,14 +84,16 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<UserManagement.Role, 'roleId' | 'roleName'>;
+type FormModel = Pick<UserManagement.Role, 'roleId' | 'roleName' | 'isAdmin' | 'isNewUser'>;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 function createDefaultFormModel(): FormModel {
   return {
     roleId: 0,
-    roleName: ''
+    roleName: '',
+    isAdmin: false,
+    isNewUser: false
   };
 }
 
@@ -105,7 +121,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
-      const { data } = await fetchAddRole(formModel.roleName);
+      const { data } = await fetchAddRole(formModel.roleName, formModel.isAdmin, formModel.isNewUser);
       if (data) {
         window.$message?.success('新增成功!');
         emit('updateDataTable');
@@ -114,7 +130,12 @@ async function handleSubmit() {
     },
     edit: async () => {
       if (props.editData) {
-        const { data } = await fetchUpdateRole(formModel.roleId, formModel.roleName);
+        const { data } = await fetchUpdateRole(
+          formModel.roleId,
+          formModel.roleName,
+          formModel.isAdmin,
+          formModel.isNewUser
+        );
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();
