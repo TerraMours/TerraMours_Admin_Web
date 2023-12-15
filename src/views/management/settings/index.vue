@@ -69,6 +69,9 @@
           <n-form-item-grid-item :span="12" label="每1k Token定价" path="TokenPrice">
             <n-input-number v-model:value="openaiModel.tokenPrice"></n-input-number>
           </n-form-item-grid-item>
+					<n-form-item-grid-item :span="12" label="新用户赠送金额" path="TokenPrice">
+						<n-input-number v-model:value="openaiModel.newUserBalance"></n-input-number>
+					</n-form-item-grid-item>
           <n-form-item-grid-item :span="24" label="OpenAI参数配置" path="gpt4Key">
           </n-form-item-grid-item>
           <n-form-item-grid-item :span="8" label="MaxTokens最大回复数" path="maxTokens">
@@ -171,6 +174,7 @@
 })
 const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     tokenPrice:0,
+    newUserBalance:0,
     openAI:{
     keyList:[],
     maxTokens:1500,

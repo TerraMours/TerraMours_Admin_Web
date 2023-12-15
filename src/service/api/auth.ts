@@ -126,8 +126,8 @@ export function fetchDelRole(roleId: number){
  * @param roleName
  * @returns
  */
-export function fetchUpdateRole(roleId:number  | null,roleName:string | null){
-return request.post<boolean>('/api/v1/Role/UpdateRole',{roleId,roleName});
+export function fetchUpdateRole(roleId:number  | null,roleName:string | null,isAdmin:boolean,isNewUser:boolean){
+return request.post<boolean>('/api/v1/Role/UpdateRole',{roleId,roleName,isAdmin,isNewUser});
 }
 
 /**
@@ -135,8 +135,8 @@ return request.post<boolean>('/api/v1/Role/UpdateRole',{roleId,roleName});
  * @param roleName
  * @returns
  */
-export function fetchAddRole(roleName:string | null){
-  return request.post<boolean>('/api/v1/Role/AddRole',{roleName});
+export function fetchAddRole(roleName:string | null,isAdmin:boolean,isNewUser:boolean){
+  return request.post<boolean>('/api/v1/Role/AddRole',{roleName,isAdmin,isNewUser});
 }
 
 

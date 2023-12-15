@@ -33,7 +33,7 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NPopconfirm, NSpace } from 'naive-ui';
+import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { fetchRoleList, fetchDelRole } from '@/service';
 import { useBoolean, useLoading } from '@/hooks';
@@ -80,6 +80,20 @@ const columns: Ref<DataTableColumns<UserManagement.Role>> = ref([
     title: '创建时间',
     align: 'center'
   },
+	{
+		key: 'externalUrl',
+		title: '角色特性',
+		align: 'center',
+		render: row => {
+			if (row.isAdmin) {
+				return <NTag type="success">系统管理员</NTag>;
+			}
+			else if(row.isNewUser) {
+				return <NTag type="success">默认角色</NTag>;
+			}
+			return <NTag type="success">普通</NTag>;
+		}
+	},
   {
     key: 'modifyDate',
     title: '更新时间',
