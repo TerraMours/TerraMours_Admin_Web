@@ -132,7 +132,7 @@ declare namespace ApiGptManagement {
   interface Conversations {
     conversationId: number;
     conversationName: string;
-    // isEdit: boolean;
+    isEdit: boolean;
   }
   /** 图片记录 */
   interface Image {
