@@ -211,3 +211,27 @@ export const fetchAllAnalysisList = async (
   });
   return data;
 };
+/** 会话列表 */
+export const fetchConversationsList = async (PageIndex: number, PageSize: number, QueryString: string | null) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.Conversations> | null>(
+    '/api/v1/Chat/ChatConversationList',
+    {
+      PageSize,
+      PageIndex,
+      QueryString
+    }
+  );
+  return data;
+};
+/** 删除会话 */
+export const fetchDeleteChatConversation = async (conversationId: number) => {
+  return request.get<boolean>('/api/v1/Chat/DeleteChatConversation', { conversationId });
+};
+/** 修改聊天会话 */
+export const fetchChangeChatConversation = async (conversationId: number, conversationName: string) => {
+  return request.get<boolean>('/api/v1/Chat/ChangeChatConversation', { conversationId, conversationName });
+};
+/** 新建聊天会话 */
+export const fetchAddChatConversation = async (conversationName: string) => {
+  return request.get<ApiGptManagement.Conversations>('/api/v1/Chat/AddChatConversation', { conversationName });
+};

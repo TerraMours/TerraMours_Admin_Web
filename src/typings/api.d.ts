@@ -129,6 +129,11 @@ declare namespace ApiGptManagement {
     userName: string;
     createDate: Date;
   }
+  interface Conversations {
+    conversationId: number;
+    conversationName: string;
+    // isEdit: boolean;
+  }
   /** 图片记录 */
   interface Image {
     collectCount: number;
