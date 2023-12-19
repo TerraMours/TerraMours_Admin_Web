@@ -29,6 +29,7 @@
 								<n-input
 									v-if="item.isEdit"
 									v-model:value="item.conversationName" size="tiny"
+									@keypress="handleEnter(item, false, $event)"
 								/>
 								<span v-else>{{ item.conversationName }}</span>
 							</div>
@@ -75,9 +76,14 @@ const chatStore = useChatState();
 const { isMobile } = useBasicLayout()
 async function getConversationsList() {
 	const { data } = await fetchConversationsList(1, 100, null);
-	if (data) {
-		conversationData.value = data.items;
-	}
+  if (data !=null && data.items != null) {
+    conversationData.value = data!.items
+    if (data.items.length > 0) {
+      if (!data.items.some(m => m.conversationId === chatStore.active))
+        chatStore.setActive( data.items[0].conversationId);
+    }
+    else { chatStore.setActive(0) }
+  }
 }
 async function addChatConversation() {
 	const { data } = await fetchAddChatConversation('NEW Chat');
@@ -117,7 +123,7 @@ async function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
 	const delItem = conversationData.value[index]
 
 	const data = await fetchDeleteChatConversation(delItem.conversationId)
-	if (data === true) {
+	if (data) {
 		conversationData.value.splice(index, 1)
 		await chatStore.setActive(conversationData.value.length > 0 ? conversationData.value[index - 1].conversationId : 0);
 	}

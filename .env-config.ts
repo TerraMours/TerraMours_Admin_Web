@@ -4,7 +4,8 @@ type ServiceEnv = Record<ServiceEnvType, ServiceEnvConfig>;
 /** 不同请求服务的环境配置 */
 const serviceEnv: ServiceEnv = {
   dev: {
-    url: 'http://43.134.164.127:4112'
+    // url: 'http://43.134.164.127:4112'
+    url: 'http://localhost:3116'
   },
   test: {
     url: 'http://43.134.164.127:4112'

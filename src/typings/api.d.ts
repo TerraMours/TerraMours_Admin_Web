@@ -128,6 +128,13 @@ declare namespace ApiGptManagement {
     userId: number;
     userName: string;
     createDate: Date;
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+    error?: boolean;
+    loading?: boolean;
+    model: string;
+    modelType: string;
   }
   interface Conversations {
     conversationId: number;
