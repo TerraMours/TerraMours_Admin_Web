@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col w-full h-full">
 	<main class="flex-1 overflow-hidden">
-	<div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto">
+	<div id="scrollRef" ref="scrollRef" class="h-full  overflow-y-auto">
 		<div
 			id="image-wrapper"
 			class="w-full max-w-screen-xl m-auto dark:bg-[#101014]"
@@ -78,7 +78,7 @@ import { useBasicLayout } from '@/composables';
 import { countTokens } from '../../../../../utils';
 import Message from '../message/index.vue';
 import { t } from '@/locales';
-const scrollRef = document.getElementById('scrollRef');
+let scrollRef =ref<HTMLElement | null>(null)
 const { isMobile } = useBasicLayout()
 const chatStore = useChatState();
 const page = ref(1)
@@ -91,7 +91,16 @@ const usingContext = ref(10)
 const buttonDisabled = computed(() => {
 	return loading.value || !prompt.value || prompt.value.trim() === ''
 })
-
+interface Emits {
+    (e: 'addConversation', param:ApiGptManagement.Conversations): void;
+}
+const emit = defineEmits<Emits>();
+function refreshVue() {
+    console.log('ceshi')
+    page.value=1;
+    pageSize.value=10;
+    getChatList();
+}
 // const modelOptions: Array<{ label: string; value: string; length: number;disabled: boolean }> = [
 // 	{ label: 'ChatGpt', value: 'ChatGpt', length: 4000, disabled: true },
 // 	{ label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo', length: 2000, disabled: false },
@@ -143,9 +152,11 @@ const placeholder = computed(() => {
 	return t('message.chat.placeholder')
 })
 async function getChatList() {
+	console.log("加载当前会话id"+chatStore.active);
 	const { data } = await fetchChatList(chatStore.active,null, page.value, pageSize.value);
 	if (data) {
 		chatRecords.value = data.items;
+    scrollToBottom();
 	}
 }
 // 点击删除指定记录
@@ -271,6 +282,7 @@ async function ChatConversation() {
 								chatRecords.value[index].message = resdata.data.Message ?? ''
 								if (chatStore.active === 0)
 									chatStore.setActive( resdata.data.ConversationId);
+                  emit('addConversation',{conversationId:resdata.data.ConversationId,conversationName:askMessage.substring(5),isEdit:false});
 							}
 							scrollToBottomIfAtBottom()
 						}
@@ -297,31 +309,37 @@ async function ChatConversation() {
 }
 
 const scrollToBottom = async () => {
+  console.log('位置'+scrollRef!.value!.scrollTop)
 	await nextTick()
-	if (scrollRef) {
-		scrollRef.scrollTop = scrollRef.scrollHeight;
+	if (scrollRef && scrollRef.value) {
+		scrollRef.value.scrollTop = scrollRef.value.scrollHeight;
 	}
 }
 
 // const scrollToTop = async () => {
 // 	await nextTick()
 // 	if (scrollRef)
-// 		scrollRef.scrollTop = 0
+// 		scrollRef.value.scrollTop = 0
 // }
 
 const scrollToBottomIfAtBottom = async () => {
+
 	await nextTick()
-	if (scrollRef) {
+	if (scrollRef && scrollRef.value) {
 		const threshold = 100 // 阈值，表示滚动条到底部的距离阈值
-		const distanceToBottom = scrollRef.scrollHeight - scrollRef.scrollTop - scrollRef.clientHeight
+		const distanceToBottom = scrollRef.value.scrollHeight - scrollRef.value.scrollTop - scrollRef.value.clientHeight
 		if (distanceToBottom <= threshold)
-			scrollRef.scrollTop = scrollRef.scrollHeight
+			scrollRef.value.scrollTop = scrollRef.value.scrollHeight
 	}
 }
 
 onMounted(() => {
-	if (scrollRef)
-		scrollRef.addEventListener('scroll', handleScroll)
+    console.log('刷新')
+  scrollRef.value=document.getElementById('scrollRef');
+  if (scrollRef.value)
+  scrollRef.value.addEventListener('scroll', handleScroll)
 	getChatList();
 });
+
+defineExpose({ refreshVue });
 </script>

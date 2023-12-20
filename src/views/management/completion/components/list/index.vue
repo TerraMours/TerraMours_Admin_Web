@@ -17,9 +17,10 @@
 						<span>无数据</span>
 					</div>
 					<div v-else v-for="(item, index) of conversationData" :key="index">
+
 						<a
-							class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 dark:hover:bg-[#24272e]"
-							:class="isActive(item.conversationId) && ['border-[#4b9e5f]', 'bg-neutral-100', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']"
+							class="relative flex items-center gap-3 px-3 py-3 break-all border rounded-md cursor-pointer hover:bg-neutral-100 group dark:border-neutral-800 "
+							:class="isActive(item.conversationId) && getBorderClass()"
 							@click="handleSelect(item)"
 						>
             <span>
@@ -71,9 +72,22 @@ import { onMounted, ref } from 'vue';
 import { useChatState } from '@/store';
 import { debounce } from 'lodash-es';
 import { useBasicLayout } from '@/composables';
+import {localStg} from "@/utils";
 const conversationData=ref<ApiGptManagement.Conversations[]>([]);
 const chatStore = useChatState();
 const { isMobile } = useBasicLayout()
+interface Emits {
+  (e: 'refreshChat'): void;
+}
+const themeColor =ref('[#4b9e5f]');
+// const themeColor ='['+ localStg.get('themeColor')+']' || '[#4b9e5f]';
+console.log('主题色'+themeColor.value);
+const emit = defineEmits<Emits>();
+async function addFaultConversation(data:ApiGptManagement.Conversations) {
+  if (data) {
+    conversationData.value= [data, ...conversationData.value]
+  }
+}
 async function getConversationsList() {
 	const { data } = await fetchConversationsList(1, 100, null);
   if (data !=null && data.items != null) {
@@ -91,11 +105,14 @@ async function addChatConversation() {
 		conversationData.value= [data, ...conversationData.value]
 	}
 }
-
+async function refreshChat() {
+  emit('refreshChat');
+}
 async function handleSelect({ conversationId }: ApiGptManagement.Conversations) {
 	if (isActive(conversationId))
 		return
 	await chatStore.setActive(conversationId)
+  await refreshChat();
 	if (isMobile)
 		chatStore.setSiderCollapsed(true)
 }
@@ -104,7 +121,6 @@ function isActive(uuid: number) {
 }
 async function handleEdit(conversation: ApiGptManagement.Conversations, isEdit: boolean, event?: MouseEvent) {
 	debugger
-	console.log('111');
 	event?.stopPropagation()
 	conversation.isEdit = isEdit
 	if (isEdit === false)
@@ -132,8 +148,12 @@ async function handleDelete(index: number, event?: MouseEvent | TouchEvent) {
 }
 
 const handleDeleteDebounce = debounce(handleDelete, 600)
-
+function getBorderClass(){
+  return ['border-'+themeColor.value, 'bg-neutral-101', 'text-[#4b9e5f]', 'dark:bg-[#24272e]', 'dark:border-[#4b9e5f]', 'pr-14']
+}
 onMounted(() => {
+  themeColor.value ='['+ localStg.get('themeColor')+']';
 	getConversationsList();
 });
+defineExpose({ addFaultConversation })
 </script>

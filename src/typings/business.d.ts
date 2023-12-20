@@ -121,3 +121,10 @@ declare namespace PayManagement {
     key: number;
   }
 }
+declare namespace Completion {
+  interface ChatState {
+    /** 当前会话id */
+    activeId: number;
+    siderCollapsed: boolean;
+  }
+}

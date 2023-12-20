@@ -1,16 +1,23 @@
 import { defineStore } from 'pinia';
+import { localStg } from '@/utils';
 
-interface ChatState {
-  /** 当前会话id */
-  activeId: number;
-  siderCollapsed: boolean;
-}
-
-export const useChatState = defineStore('chat-store', {
-  state: (): ChatState => ({
+function defaultState(): Completion.ChatState {
+  return {
     activeId: 0,
     siderCollapsed: false
-  }),
+  };
+}
+
+function getLocalState(): Completion.ChatState {
+  const chatStorage:Completion.ChatState=localStg.get('chatStorage') || defaultState();
+  return chatStorage;
+}
+
+function setLocalState(state: Completion.ChatState) {
+  localStg.set('chatStorage', state);
+}
+export const useChatState = defineStore('chat-store', {
+  state: (): Completion.ChatState => getLocalState(),
   getters: {
     /** 是否登录 */
     active(state) {
@@ -20,9 +27,11 @@ export const useChatState = defineStore('chat-store', {
   actions: {
     async setActive(uuid: number) {
       this.activeId = uuid;
+      setLocalState(this.$state);
     },
     setSiderCollapsed(collapsed: boolean) {
       this.siderCollapsed = collapsed;
+      setLocalState(this.$state);
     }
   }
 });
