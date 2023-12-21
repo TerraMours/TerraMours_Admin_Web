@@ -1,3 +1,4 @@
+import type { AxiosProgressEvent, GenericAbortSignal } from 'axios';
 import { adapter } from '@/utils';
 import { request } from '../request';
 import {
@@ -58,15 +59,20 @@ export const fetchSensitiveList = async (
 
 /** 获取聊天记录列表 */
 export const fetchChatList = async (
+  conversationId: number | null,
   queryString: string | null,
   pageIndex: number | undefined,
   pageSize: number | undefined
 ) => {
   const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.Chat> | null>(
     '/api/v1/Chat/ChatRecordList',
-    { queryString, pageIndex, pageSize }
+    { conversationId, queryString, pageIndex, pageSize }
   );
   return adapter(adapterOfFetchPageChatList, data);
+};
+/** 删除会话 */
+export const fetchDeleteChatRecord = async (recordId: number) => {
+  return request.get<boolean>('/api/v1/Chat/DeleteChatRecord', { recordId });
 };
 /** 获取聊天记录列表 */
 export const fetchAllImageList = async (
@@ -210,4 +216,56 @@ export const fetchAllAnalysisList = async (
     endTime
   });
   return data;
+};
+/** 会话列表 */
+export const fetchConversationsList = async (PageIndex: number, PageSize: number, QueryString: string | null) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.Conversations> | null>(
+    '/api/v1/Chat/ChatConversationList',
+    {
+      PageSize,
+      PageIndex,
+      QueryString
+    }
+  );
+  return data;
+};
+/** 删除会话 */
+export const fetchDeleteChatConversation = async (conversationId: number) => {
+  return request.get<boolean>('/api/v1/Chat/DeleteChatConversation', { conversationId });
+};
+/** 修改聊天会话 */
+export const fetchChangeChatConversation = async (conversationId: number, conversationName: string) => {
+  return request.get<boolean>('/api/v1/Chat/ChangeChatConversation', { conversationId, conversationName });
+};
+/** 新建聊天会话 */
+export const fetchAddChatConversation = async (conversationName: string) => {
+  return request.get<ApiGptManagement.Conversations>('/api/v1/Chat/AddChatConversation', { conversationName });
+};
+
+export const fetchChatAPIProcess = async (params: {
+  prompt: string;
+  // 会话ID
+  conversationId: number | null;
+  model: string;
+  modelType: number;
+  contextCount: number | null;
+  // options?: { conversationId?: string; parentMessageId?: string }
+  signal?: GenericAbortSignal;
+  onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+}) => {
+  const data: Record<string, any> = {
+    prompt: params.prompt,
+    conversationId: params.conversationId,
+    model: params.model,
+    modelType: params.modelType,
+    contextCount: params.contextCount
+  };
+  return request.post<string>('/api/v1/Chat/ChatCompletionStream', data, {
+    signal: params.signal,
+    onDownloadProgress: params.onDownloadProgress,
+    headers: {
+      Accept: 'application/octet-stream',
+      'Content-Type': 'application/json'
+    }
+  });
 };

@@ -432,7 +432,7 @@ async function askHandleUpdateValue(){
 }
 
 onMounted(() => {
-  setTimeout(() => { getAnalysisList(); }, 1000);
+  getAnalysisList();
   getTokenList();
    getUseList();
   getSaleMoneyList();

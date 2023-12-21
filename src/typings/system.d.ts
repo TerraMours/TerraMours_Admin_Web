@@ -314,5 +314,29 @@ declare namespace I18nType {
         about: string;
       };
     };
+    chat: {
+      newChatButton: string;
+      placeholder: string;
+      placeholderMobile: string;
+      copy: string;
+      copied: string;
+      copyCode: string;
+      clearChat: string;
+      clearChatConfirm: string;
+      exportImage: string;
+      exportImageConfirm: string;
+      exportSuccess: string;
+      exportFailed: string;
+      usingContext: string;
+      turnOnContext: string;
+      turnOffContext: string;
+      deleteMessage: string;
+      deleteMessageConfirm: string;
+      deleteHistoryConfirm: string;
+      clearHistoryConfirm: string;
+      preview: string;
+      showRawText: string;
+      delete: string;
+    };
   }
 }
