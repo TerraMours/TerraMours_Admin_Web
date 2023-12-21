@@ -42,9 +42,9 @@ const wrapClass = computed(() => {
     'min-w-[20px]',
     'rounded-md',
     isMobile ? 'p-2' : 'px-3 py-2',
-    props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
-    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
-    props.inversion ? 'message-reply' : 'message-reply',
+    props.inversion ? 'bg-primary_1' : 'bg-[#f4f6f8]',
+    props.inversion ? 'dark:bg-primary' : 'dark:bg-[#1e1e20]',
+    props.inversion ? 'message-request' : 'message-reply',
     { 'text-red-500': props.error }
   ];
 });
@@ -65,7 +65,7 @@ defineExpose({ textRef });
 </script>
 
 <template>
-  <div class="text-black" :class="wrapClass">
+  <div  :class="wrapClass">
     <div ref="textRef" class="leading-relaxed break-words">
       <div v-if="!inversion">
         <div v-if="!asRawText" class="markdown-body" v-html="text" />
@@ -81,4 +81,6 @@ defineExpose({ textRef });
 
 <style lang="less">
 @import url(./style.less);
+@import url(./highlight.less);
+@import url(./github-markdown.less);
 </style>

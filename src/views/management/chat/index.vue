@@ -65,7 +65,7 @@ const pagination: PaginationProps = reactive({
 
 async function getTableData() {
   startLoading();
-  const { data } = await fetchChatList(null,getQueryString(), pagination.page, pagination.pageSize);
+  const { data } = await fetchChatList(0,getQueryString(), pagination.page, pagination.pageSize);
   if (data) {
     setTimeout(() => {
       setTableData(data.items);

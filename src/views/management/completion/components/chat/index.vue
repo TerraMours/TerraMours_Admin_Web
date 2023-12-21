@@ -51,6 +51,7 @@
 							:placeholder="placeholder"
 							:autosize="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
 							show-count
+							@keypress="handleEnter"
 						>
 							<template #count="">
 								<NSpace :size="[2, 0]">
@@ -91,15 +92,29 @@ const usingContext = ref(10)
 const buttonDisabled = computed(() => {
 	return loading.value || !prompt.value || prompt.value.trim() === ''
 })
-interface Emits {
-    (e: 'addConversation', param:ApiGptManagement.Conversations): void;
-}
-const emit = defineEmits<Emits>();
+// interface Emits {
+//     (e: 'addConversation', param:ApiGptManagement.Conversations): void;
+// }
+// const emit = defineEmits<Emits>();s
 function refreshVue() {
     console.log('ceshi')
     page.value=1;
     pageSize.value=10;
     getChatList();
+}
+const handleEnter = (event: KeyboardEvent) => {
+    if (!isMobile.value) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault()
+            ChatConversation()
+        }
+    }
+    else {
+        if (event.key === 'Enter' && event.ctrlKey) {
+            event.preventDefault()
+            ChatConversation()
+        }
+    }
 }
 // const modelOptions: Array<{ label: string; value: string; length: number;disabled: boolean }> = [
 // 	{ label: 'ChatGpt', value: 'ChatGpt', length: 4000, disabled: true },
@@ -282,7 +297,6 @@ async function ChatConversation() {
 								chatRecords.value[index].message = resdata.data.Message ?? ''
 								if (chatStore.active === 0)
 									chatStore.setActive( resdata.data.ConversationId);
-                  emit('addConversation',{conversationId:resdata.data.ConversationId,conversationName:askMessage.substring(5),isEdit:false});
 							}
 							scrollToBottomIfAtBottom()
 						}
