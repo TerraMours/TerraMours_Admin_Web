@@ -1,5 +1,6 @@
 <template>
 	<n-layout-sider
+    :collapsed="isMobile ? true : false"
 		collapse-mode="width"
 		:collapsed-width="0"
 		:width="240"
