@@ -249,6 +249,7 @@ export const fetchChatAPIProcess = async (params: {
   model: string;
   modelType: number;
   contextCount: number | null;
+  fileUrl?: string | null;
   // options?: { conversationId?: string; parentMessageId?: string }
   signal?: GenericAbortSignal;
   onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
@@ -258,7 +259,8 @@ export const fetchChatAPIProcess = async (params: {
     conversationId: params.conversationId,
     model: params.model,
     modelType: params.modelType,
-    contextCount: params.contextCount
+    contextCount: params.contextCount,
+    fileUrl: params.fileUrl
   };
   return request.post<string>('/api/v1/Chat/ChatCompletionStream', data, {
     signal: params.signal,
