@@ -9,7 +9,7 @@
     <div class="flex justify-end h-full">
       <global-search />
       <github-site />
-      <full-screen />
+      <full-screen v-if="theme.header.crumb.visible && !isMobile"/>
       <theme-mode />
       <system-message />
       <setting-button v-if="showButton" />

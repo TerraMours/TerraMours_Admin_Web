@@ -210,9 +210,10 @@ const  openaiModel = ref<ApiGptManagement.OpenAIOptions>({
     { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo',disabled:false },
     { label: 'gpt-3.5-turbo-16k',value: 'gpt-3.5-turbo-16k',disabled:false },
     { label: 'gpt-4', value: 'gpt-4',disabled:false },
-
+    { label: 'gpt-4-vision-preview', value: 'gpt-4-vision-preview',disabled:false },
     { label: 'ChatGLM', value: 'ChatGLM',disabled:true },
     { label: 'ChatGLM', value: 'ChatGLM',disabled:false },
+		{ label: 'chatglm3_turbo', value: 'chatglm3_turbo',disabled:false },
       { label: '文心千帆', value: '文心千帆',disabled:true },
       { label: 'ERNIE_Bot_4', value: 'completions_pro',disabled:false },
       { label: 'ERNIE_Bot_8K', value: 'ernie_bot_8k',disabled:false },

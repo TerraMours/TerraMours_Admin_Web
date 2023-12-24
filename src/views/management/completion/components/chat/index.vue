@@ -26,6 +26,7 @@
 						:inversion="item.role === 'user'"
 						:error="item.error"
 						:loading="item.loading"
+            :counter="submitFooterInputCounter"
 						@delete="handleDelete(index)"
 					/>
 					<div class="sticky bottom-0 left-0 flex justify-center">
@@ -43,7 +44,25 @@
 	</main>
 		<footer :class="footerClass">
 			<div class="w-full max-w-screen-xl m-auto">
+        <n-upload v-if="showImage"
+            v-model:file-list="fileList"
+            :action="uploadUrl"
+            :headers="{ Authorization: `Bearer ${localStg.get('token')}` }"
+            list-type="image-card"
+            :max="1"
+            accept="image/png, image/jpeg"
+            @finish="handleFinish"
+        />
 				<div class="flex items-center justify-between space-x-2">
+            <NPopselect
+                    v-model:value="modelType" :options="modelOptions" trigger="click" scrollable size="large"
+                    :on-update:value="(value) => modelType = value"
+            >
+                <NButton>{{ modelOptions.find(i => i.value === modelType)?.label || '请选择模型' }}</NButton>
+            </NPopselect>
+            <n-button @click="showImage=!showImage">
+              图文分析
+            </n-button>
 						<NInput
 							ref="inputRef"
 							v-model:value="prompt"
@@ -74,11 +93,12 @@
 <script setup lang="tsx">
 import { useChatState } from '@/store';
 import { computed, nextTick, onMounted, ref } from 'vue';
-import { fetchChatAPIProcess, fetchChatList, fetchDeleteChatRecord } from '@/service';
+import {apiUrl, fetchChatAPIProcess, fetchChatList, fetchDeleteChatRecord} from '@/service';
 import { useBasicLayout } from '@/composables';
-import { countTokens } from '../../../../../utils';
+import {countTokens, localStg} from '../../../../../utils';
 import Message from '../message/index.vue';
 import { t } from '@/locales';
+import {UploadFileInfo} from "naive-ui";
 let scrollRef =ref<HTMLElement | null>(null)
 const { isMobile } = useBasicLayout()
 const chatStore = useChatState();
@@ -88,10 +108,19 @@ const chatRecords = ref<ApiGptManagement.Chat[]>([])
 const prompt = ref<string>('')
 const modelType = ref<string>('gpt-3.5-turbo')
 const loading = ref<boolean>(false)
+const showImage=ref<boolean>(false)
 const usingContext = ref(10)
 const buttonDisabled = computed(() => {
 	return loading.value || !prompt.value || prompt.value.trim() === ''
 })
+//上传图片
+const fileList = ref<UploadFileInfo[]>();
+const uploadUrl = `${apiUrl}/api/v1/Product/UploadProductImage`;
+const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  const res = JSON.parse((event?.target as XMLHttpRequest).response);
+  file.url = `${apiUrl}${res.data}`;
+  return file;
+};
 // interface Emits {
 //     (e: 'addConversation', param:ApiGptManagement.Conversations): void;
 // }
@@ -116,37 +145,39 @@ const handleEnter = (event: KeyboardEvent) => {
         }
     }
 }
-// const modelOptions: Array<{ label: string; value: string; length: number;disabled: boolean }> = [
-// 	{ label: 'ChatGpt', value: 'ChatGpt', length: 4000, disabled: true },
-// 	{ label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo', length: 2000, disabled: false },
-// 	{ label: 'gpt-3.5-turbo-16k(会员专属)', value: 'gpt-3.5-turbo-16k', length: 4000, disabled: false },
-// 	{ label: 'gpt-4(余额计费)', value: 'gpt-4', length: 4000, disabled: false },
-// 	{ label: 'chatGLM', value: 'chatGLM', length: 4000, disabled: true },
-// 	{ label: 'chatGLM', value: 'ChatGLM', length: 4000, disabled: false },
-// 	{ label: '文心千帆', value: '文心千帆', length: 4000, disabled: true },
-// 	{ label: 'ERNIE_Bot_4', value: 'completions_pro', length: 4000, disabled: false },
-// 	{ label: 'ERNIE_Bot_8K', value: 'ernie_bot_8k', length: 4000, disabled: false },
-// 	{ label: 'ERNIE_Bot', value: 'completions', length: 4000, disabled: false },
-// 	{ label: 'ERNIE_Bot_turbo', value: 'eb-instant', length: 4000, disabled: false },
-// 	{ label: 'ERNIE_Bot_turbo_AI', value: 'ai_apaas', length: 4000, disabled: false },
-// 	{ label: 'BLOOMZ_7B', value: 'bloomz_7b1', length: 4000, disabled: false },
-// 	{ label: 'Qianfan_BLOOMZ_7B_compressed', value: 'qianfan_bloomz_7b_compressed', length: 4000, disabled: false },
-// 	{ label: 'Llama_2_7b_chat', value: 'llama_2_7b', length: 4000, disabled: false },
-// 	{ label: 'Llama_2_13b_chat', value: 'llama_2_13b', length: 4000, disabled: false },
-// 	{ label: 'Llama_2_70b_chat', value: 'llama_2_70b', length: 4000, disabled: false },
-// 	{ label: 'Qianfan_Chinese_Llama_2_7B', value: 'qianfan_chinese_llama_2_7b', length: 4000, disabled: false },
-// 	{ label: 'Qianfan_Chinese_Llama_2_13B', value: 'qianfan_chinese_llama_2_13b', length: 4000, disabled: false },
-// 	{ label: 'ChatGLM2_6B_32K', value: 'chatglm2_6b_32k', length: 4000, disabled: false },
-// 	{ label: 'XuanYuan_70B_Chat_4bit', value: 'xuanyuan_70b_chat', length: 4000, disabled: false },
-// 	{ label: 'AquilaChat_7B', value: 'aquilachat_7b', length: 4000, disabled: false },
-// 	{ label: '同义千问', value: '同义千问', length: 4000, disabled: true },
-// 	{ label: 'qwen-max', value: 'qwen-max', length: 4000, disabled: false },
-// 	{ label: 'qwen-turbo', value: 'qwen-turbo', length: 4000, disabled: false },
-// 	{ label: 'qwen-plus', value: 'qwen-plus', length: 4000, disabled: false },
-//
-// ]
+const modelOptions: Array<{ label: string; value: string; length: number;disabled: boolean }> = [
+    { label: 'ChatGpt', value: 'ChatGpt', length: 4000, disabled: true },
+    { label: 'gpt-3.5-turbo', value: 'gpt-3.5-turbo', length: 2000, disabled: false },
+    { label: 'gpt-3.5-turbo-16k', value: 'gpt-3.5-turbo-16k', length: 4000, disabled: false },
+    { label: 'gpt-4', value: 'gpt-4', length: 4000, disabled: false },
+    { label: 'gpt-4-vision-preview', value: 'gpt-4-vision-preview',length: 4000,disabled:false },
+    { label: 'chatGLM', value: 'chatGLM', length: 4000, disabled: true },
+    { label: 'chatGLM', value: 'ChatGLM', length: 4000, disabled: false },
+    { label: 'chatglm3_turbo', value: 'chatglm3_turbo',length: 4000,disabled:false },
+    { label: '文心千帆', value: '文心千帆', length: 4000, disabled: true },
+    { label: 'ERNIE_Bot_4', value: 'completions_pro', length: 4000, disabled: false },
+    { label: 'ERNIE_Bot_8K', value: 'ernie_bot_8k', length: 4000, disabled: false },
+    { label: 'ERNIE_Bot', value: 'completions', length: 4000, disabled: false },
+    { label: 'ERNIE_Bot_turbo', value: 'eb-instant', length: 4000, disabled: false },
+    { label: 'ERNIE_Bot_turbo_AI', value: 'ai_apaas', length: 4000, disabled: false },
+    { label: 'BLOOMZ_7B', value: 'bloomz_7b1', length: 4000, disabled: false },
+    { label: 'Qianfan_BLOOMZ_7B_compressed', value: 'qianfan_bloomz_7b_compressed', length: 4000, disabled: false },
+    { label: 'Llama_2_7b_chat', value: 'llama_2_7b', length: 4000, disabled: false },
+    { label: 'Llama_2_13b_chat', value: 'llama_2_13b', length: 4000, disabled: false },
+    { label: 'Llama_2_70b_chat', value: 'llama_2_70b', length: 4000, disabled: false },
+    { label: 'Qianfan_Chinese_Llama_2_7B', value: 'qianfan_chinese_llama_2_7b', length: 4000, disabled: false },
+    { label: 'Qianfan_Chinese_Llama_2_13B', value: 'qianfan_chinese_llama_2_13b', length: 4000, disabled: false },
+    { label: 'ChatGLM2_6B_32K', value: 'chatglm2_6b_32k', length: 4000, disabled: false },
+    { label: 'XuanYuan_70B_Chat_4bit', value: 'xuanyuan_70b_chat', length: 4000, disabled: false },
+    { label: 'AquilaChat_7B', value: 'aquilachat_7b', length: 4000, disabled: false },
+    { label: '同义千问', value: '同义千问', length: 4000, disabled: true },
+    { label: 'qwen-max', value: 'qwen-max', length: 4000, disabled: false },
+    { label: 'qwen-turbo', value: 'qwen-turbo', length: 4000, disabled: false },
+    { label: 'qwen-plus', value: 'qwen-plus', length: 4000, disabled: false },
+
+]
 // 计算每一种模式下可以输入的字符数
-// const submitFooterInputCounter = computed(() => modelOptions.find(i => i.value === modelType.value)?.length || 0)
+ const submitFooterInputCounter = computed(() => modelOptions.find(i => i.value === modelType.value)?.length || 0)
 // 添加请求终断对象
 const controller = ref(new AbortController())
 const ganNewController = () => {
@@ -220,6 +251,8 @@ async function slideLoading() {
 
 // 发起对话
 async function ChatConversation() {
+  console.log("tupian:"+fileList)
+  console.log("tupian:"+fileList.value)
 	try {
 		const askMessage = prompt.value
 		// 防止二次点击按钮重复发起
@@ -271,10 +304,12 @@ async function ChatConversation() {
 			const fetchChatAPIOnce = async () => {
 				await fetchChatAPIProcess({
 					conversationId: chatStore.active,
-					model: modelType.value,
+					model:( fileList.value !== undefined && fileList.value[0] !== null && fileList.value[0] !== undefined) ? 'gpt-4-vision-preview' :  modelType.value,
 					modelType: 0,
 					prompt: askMessage,
 					contextCount: !usingContext.value ? 0 : null,
+          fileUrl: ( fileList.value !== undefined && fileList.value[0] !== null && fileList.value[0] !== undefined) ?fileList.value[0].url : null,
+
 					// 传入signal 代表此请求可控
 					signal: ganNewController().signal,
 					onDownloadProgress: ({ event }) => {
@@ -309,6 +344,7 @@ async function ChatConversation() {
 				// 重置当前条目的loading状态
 				chatRecords.value[index].loading = false
 				prompt.value = ''
+        fileList.value=[]
 			}
 			await fetchChatAPIOnce()
 		}
@@ -323,7 +359,6 @@ async function ChatConversation() {
 }
 
 const scrollToBottom = async () => {
-  console.log('位置'+scrollRef!.value!.scrollTop)
 	await nextTick()
 	if (scrollRef && scrollRef.value) {
 		scrollRef.value.scrollTop = scrollRef.value.scrollHeight;
