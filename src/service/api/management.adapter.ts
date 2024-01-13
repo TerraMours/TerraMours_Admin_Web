@@ -265,3 +265,37 @@ export function adapterAllProductList(data: ApiPayManagement.Product[] | null): 
     return role;
   });
 }
+
+export function adapterOfFetchKnowledgeList(
+  data: ApiKnowledgeManagement.Knowledge[] | null
+): KnowledgeManagement.Knowledge[] {
+  if (!data) return [];
+
+  return data.map((item, index) => {
+    const knowledge: KnowledgeManagement.Knowledge = {
+      index: index + 1,
+      key: item.knowledgeId,
+      ...item
+    };
+
+    return knowledge;
+  });
+}
+
+export function adapterOfFetchVectorList(
+  data: ApiKnowledgeManagement.Vector | null
+): KnowledgeManagement.ScoredVector[] {
+  if (!data) return [];
+
+  return data.matches.map((item, index) => {
+    const vector: KnowledgeManagement.ScoredVector = {
+      index: index + 1,
+      key: item.score,
+      namespace: data.namespace,
+      knowledgeId: null,
+      ...item
+    };
+
+    return vector;
+  });
+}

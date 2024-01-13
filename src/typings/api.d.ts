@@ -315,3 +315,27 @@ declare namespace ApiAnalysisManagement {
     imageCount: number;
   }
 }
+
+declare namespace ApiKnowledgeManagement {
+  interface Knowledge {
+    knowledgeId: number;
+    knowledgeName: string;
+    isCommon: boolean;
+    knowledgeType: number;
+    apiKey: string;
+    indexName: string;
+    namespaceName: string;
+    baseUrl: string;
+  }
+  interface Vector {
+    matches: ScoredVector[];
+    namespace: string;
+  }
+
+  interface ScoredVector {
+    id: string;
+    score: number;
+    values: number[];
+    metadata: [];
+  }
+}

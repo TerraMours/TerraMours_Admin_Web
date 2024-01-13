@@ -13,7 +13,9 @@ import {
   adapterAllCategoryList,
   adapterAllProductList,
   adapterOfFetchPageAllImageList,
-  adapterOfFetchPageOrderList
+  adapterOfFetchPageOrderList,
+  adapterOfFetchKnowledgeList,
+  adapterOfFetchVectorList
 } from './management.adapter';
 
 /** 获取用户列表 */
@@ -270,4 +272,34 @@ export const fetchChatAPIProcess = async (params: {
       'Content-Type': 'application/json'
     }
   });
+};
+/**
+ * 知识库列表
+ */
+export const fetchKnowledgeList = async () => {
+  const data = await request.get<ApiKnowledgeManagement.Knowledge[] | null>('/api/v1/Knowledge/GetList');
+  return adapter(adapterOfFetchKnowledgeList, data);
+};
+
+/**
+ * 知识库列表
+ */
+export const fetchVectorList = async (
+  knowledgeId: number,
+  id: string | null,
+  vector: number[] | null,
+  topK: number,
+  namespace: string | null,
+  includeValues: boolean,
+  includeMetadata: boolean
+) => {
+  const data = await request.post<ApiKnowledgeManagement.Vector | null>(`/${knowledgeId}/api/v1/Vector/Query`, {
+    id,
+    vector,
+    topK,
+    namespace,
+    includeValues,
+    includeMetadata
+  });
+  return adapter(adapterOfFetchVectorList, data);
 };

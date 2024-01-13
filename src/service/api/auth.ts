@@ -398,3 +398,31 @@ export function ImportSensitive(file:File){
 export function ShareImage(imageRecordId: number, isPublic: boolean){
 	return request.get<boolean>('/api/v1/Image/ShareImage',{imageRecordId,isPublic});
 }
+export function fetchAddKnowledge(knowledgeName:string | null,apiKey:string | null,indexName:string | null,namespaceName:string | null,baseUrl:string | null,isCommon:boolean | null,knowledgeType:number |null){
+  return request.post<boolean>('/api/v1/Knowledge/Upsert',{knowledgeName,apiKey,indexName,namespaceName,baseUrl,isCommon,knowledgeType});
+}
+
+export function fetchUpdateKnowledge(KnowledgeId:number,knowledgeName:string | null,apiKey:string | null,indexName:string | null,namespaceName:string | null,baseUrl:string | null,isCommon:boolean | null,knowledgeType:number |null){
+  return request.post<boolean>('/api/v1/Knowledge/Update',{KnowledgeId,knowledgeName,apiKey,indexName,namespaceName,baseUrl,isCommon,knowledgeType});
+}
+/**
+ * 新增vector
+ * @param word
+ * @returns
+ */
+export function fetchUpsertVector(knowledgeId: number | null,
+                                  id: string | null,
+                                  values: number[] | null,
+                                  setMetadata: [] | null,
+                                  namespace: string | null){
+  return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Upsert',{id,values,setMetadata,namespace});
+}
+/**
+ * 修改vector
+ * @param sensitiveId
+ * @param word
+ * @returns
+ */
+export function fetchUpdateVector(knowledgeId: number | null,vectors:ApiKnowledgeManagement.ScoredVector[],namespace: string | null){
+  return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Upsert',{vectors,namespace});
+}

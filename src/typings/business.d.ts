@@ -128,3 +128,20 @@ declare namespace Completion {
     siderCollapsed: boolean;
   }
 }
+/** 知识库模块 */
+declare namespace KnowledgeManagement {
+  interface Knowledge extends ApiKnowledgeManagement.Knowledge {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+  }
+  interface ScoredVector extends ApiKnowledgeManagement.ScoredVector {
+    /** 序号 */
+    index: number;
+    /** 表格的key（id） */
+    key: number;
+    namespace: string;
+    knowledgeId: number | null;
+  }
+}
