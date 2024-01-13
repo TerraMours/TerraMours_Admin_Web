@@ -112,7 +112,7 @@ async function getTableData() {
   }else {
     vector=queryString.value.split(",").map(parseFloat);
   }
-  const { data } = await fetchVectorList(knowledgeId,id,vector,topk.value,nameSpaceString.value,true,true);
+  const { data } = await fetchVectorList({knowledgeId,id,vector,topK:topk.value,namespace:nameSpaceString.value,includeValues:true,includeMetadata:true});
   if (data) {
     setTimeout(() => {
       setTableData(data);

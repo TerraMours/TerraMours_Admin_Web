@@ -284,7 +284,7 @@ export const fetchKnowledgeList = async () => {
 /**
  * 知识库列表
  */
-export const fetchVectorList = async (
+export const fetchVectorList = async (params:{
   knowledgeId: number,
   id: string | null,
   vector: number[] | null,
@@ -292,14 +292,14 @@ export const fetchVectorList = async (
   namespace: string | null,
   includeValues: boolean,
   includeMetadata: boolean
-) => {
-  const data = await request.post<ApiKnowledgeManagement.Vector | null>(`/${knowledgeId}/api/v1/Vector/Query`, {
-    id,
-    vector,
-    topK,
-    namespace,
-    includeValues,
-    includeMetadata
+}) => {
+  const data = await request.post<ApiKnowledgeManagement.Vector | null>(`/${params.knowledgeId}/api/v1/Vector/Query`, {
+    id:params.id,
+    vector:params.vector,
+    topK:params.topK,
+    namespace:params.namespace,
+    includeValues:params.includeValues,
+    includeMetadata:params.includeMetadata
   });
   return adapter(adapterOfFetchVectorList, data);
 };
