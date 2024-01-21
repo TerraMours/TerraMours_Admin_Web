@@ -335,7 +335,7 @@ declare namespace ApiKnowledgeManagement {
   interface ScoredVector {
     id: string;
     score: number;
-    values: number[];
-    metadata: [];
+    values: any;
+    metadata: any;
   }
 }

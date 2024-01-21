@@ -1,9 +1,18 @@
 <template>
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel">
-      <n-grid :cols="12" :x-gap="18">
-        <n-form-item-grid-item :span="12" label="NameSpase">
-          <n-input v-model:value="formModel.namespace" />
+      <n-grid :cols="24" :x-gap="18">
+        <n-form-item-grid-item :span="24" label="NameSpase">
+          <n-input v-model:value="formModel.namespace" :disabled="props.type == 'edit'" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" label="ID">
+          <n-input v-model:value="formModel.id" :disabled="props.type == 'edit'" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" label="values">
+          <n-input v-model:value="valuesAsString" :disabled="props.type == 'edit'" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" label="metadata">
+          <n-input v-model:value="metadateValue" type="textarea" placeholder="metadata" default-value="{}" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -47,7 +56,7 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-
+const knowledgeId = 3;
 const modalVisible = computed({
   get() {
     return props.visible;
@@ -77,14 +86,33 @@ type FormModel = Pick<
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
+const valuesAsString = ref('');
+
+function floatArrayToString(arr: any) {
+  let str = '';
+  if (arr[0].children === undefined) {
+    return str;
+  }
+  // let i = 0; i < arr.length; i ++ 新版本的JavaScript/TypeScript中，不再推荐使用 ++ 或 -- 作为一元操作符。相反，推荐使用 += 或 -= 1 作为替代。
+  for (let i = 0; i < arr.length; i += 1) {
+    if (i !== 0) {
+      str += ', ';
+    }
+    str += arr[i].children;
+  }
+  return str;
+}
+
+const metadateValue = ref('{}');
+
 function createDefaultFormModel(): FormModel {
   return {
     namespace: '',
-    knowledgeId: 0,
+    knowledgeId: 3,
     id: '',
     score: 0,
     values: [],
-    metadata: []
+    metadata: null
   };
 }
 
@@ -101,6 +129,8 @@ function handleUpdateFormModelByModalType() {
     edit: () => {
       if (props.editData) {
         handleUpdateFormModel(props.editData);
+        valuesAsString.value = floatArrayToString(props.editData.values);
+        metadateValue.value = JSON.stringify(props.editData.metadata);
       }
     }
   };
@@ -110,15 +140,11 @@ function handleUpdateFormModelByModalType() {
 
 async function handleSubmit() {
   await formRef.value?.validate();
+  formModel.values = valuesAsString.value.split(',').map(parseFloat);
+  formModel.metadata = JSON.parse(metadateValue.value);
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
-      const { data } = await fetchUpsertVector(
-        formModel.knowledgeId,
-        formModel.id,
-        formModel.values,
-        formModel.metadata,
-        formModel.namespace
-      );
+      const { data } = await fetchUpsertVector(knowledgeId, [formModel], formModel.namespace);
       if (data) {
         window.$message?.success('新增成功!');
         closeModal();
@@ -127,7 +153,13 @@ async function handleSubmit() {
     },
     edit: async () => {
       if (props.editData) {
-        const { data } = await fetchUpdateVector(formModel.knowledgeId, [formModel], formModel.namespace);
+        const { data } = await fetchUpdateVector(
+          knowledgeId,
+          formModel.id,
+          formModel.values,
+          formModel.metadata,
+          formModel.namespace
+        );
         if (data) {
           window.$message?.success('更新成功!');
           closeModal();

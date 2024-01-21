@@ -8,3 +8,4 @@ index.vue
 index.ts
 text.vue
 management.ts
+/src/views/utils/CopyCodeButton.vue

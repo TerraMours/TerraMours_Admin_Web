@@ -115,6 +115,7 @@ async function getTableData() {
   const { data } = await fetchVectorList({knowledgeId,id,vector,topK:topk.value,namespace:nameSpaceString.value,includeValues:true,includeMetadata:true});
   if (data) {
     setTimeout(() => {
+        console.log(data);
       setTableData(data);
       endLoading();
     }, 1000);

@@ -406,23 +406,23 @@ export function fetchUpdateKnowledge(KnowledgeId:number,knowledgeName:string | n
   return request.post<boolean>('/api/v1/Knowledge/Update',{KnowledgeId,knowledgeName,apiKey,indexName,namespaceName,baseUrl,isCommon,knowledgeType});
 }
 /**
- * 新增vector
+ * 修改vector
  * @param word
  * @returns
  */
-export function fetchUpsertVector(knowledgeId: number | null,
+export function fetchUpdateVector(knowledgeId: number | null,
                                   id: string | null,
                                   values: number[] | null,
                                   setMetadata: [] | null,
                                   namespace: string | null){
-  return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Upsert',{id,values,setMetadata,namespace});
+  return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Update',{id,values,setMetadata,namespace});
 }
 /**
- * 修改vector
+ * 新增vector
  * @param sensitiveId
  * @param word
  * @returns
  */
-export function fetchUpdateVector(knowledgeId: number | null,vectors:ApiKnowledgeManagement.ScoredVector[],namespace: string | null){
+export function fetchUpsertVector(knowledgeId: number | null,vectors:ApiKnowledgeManagement.ScoredVector[],namespace: string | null){
   return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Upsert',{vectors,namespace});
 }
