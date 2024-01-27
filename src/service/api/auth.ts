@@ -348,6 +348,13 @@ export function UpdateProduct(Id:number,Name: string,Description: string,Price: 
 export function DeleteProduct(id:number){
   return request.put<boolean>('/api/v1/Product/DeleteProduct?id='+id);
 }
+/** 商品购买 */
+export function PreCreate(Name: string, Price: number, Description: string, ProductId: number, isvip: boolean | null, vipLevel: number | null, vipTime: number | null) {
+  return request.post<ApiPayManagement.AlipayResponse>(
+      '/api/v1/AliPay/PreCreate',
+      {Name, Price, Description, isvip, vipLevel, vipTime, ProductId}
+  )
+}
 
 /**获取邮箱设置 */
 export function GetEmailSettings(){
@@ -398,13 +405,24 @@ export function ImportSensitive(file:File){
 export function ShareImage(imageRecordId: number, isPublic: boolean){
 	return request.get<boolean>('/api/v1/Image/ShareImage',{imageRecordId,isPublic});
 }
+/** 新增知识库 */
 export function fetchAddKnowledge(knowledgeName:string | null,apiKey:string | null,indexName:string | null,namespaceName:string | null,baseUrl:string | null,isCommon:boolean | null,knowledgeType:number |null){
   return request.post<boolean>('/api/v1/Knowledge/Upsert',{knowledgeName,apiKey,indexName,namespaceName,baseUrl,isCommon,knowledgeType});
 }
-
+/** 更新知识库 */
 export function fetchUpdateKnowledge(KnowledgeId:number,knowledgeName:string | null,apiKey:string | null,indexName:string | null,namespaceName:string | null,baseUrl:string | null,isCommon:boolean | null,knowledgeType:number |null){
   return request.post<boolean>('/api/v1/Knowledge/Update',{KnowledgeId,knowledgeName,apiKey,indexName,namespaceName,baseUrl,isCommon,knowledgeType});
 }
+/** 删除指定知识库 */
+export function fetchDeleteKnowledge (id: number) {
+  return request.get<boolean>('/api/v1/Knowledge/Delete', { id });
+}
+
+/** 查询指定知识库 */
+export function fetchQueryKnowledge (id: number) {
+  return request.get<ApiKnowledgeManagement.Knowledge>('/api/v1/Knowledge/Query', { id });
+}
+
 /**
  * 修改vector
  * @param word
@@ -426,3 +444,19 @@ export function fetchUpdateVector(knowledgeId: number | null,
 export function fetchUpsertVector(knowledgeId: number | null,vectors:ApiKnowledgeManagement.ScoredVector[],namespace: string | null){
   return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/Upsert',{vectors,namespace});
 }
+
+export function fetchEmbaddingUpsert(knowledgeId: number | null,vectors:ApiKnowledgeManagement.ScoredVector[],namespace: string | null){
+  return request.post<boolean>('/'+knowledgeId+'/api/v1/Vector/EmbaddingUpsert',{vectors,namespace});
+}
+
+export function fetchDescribeIndexStats (knowledgeId: number) {
+  return request.get<ApiKnowledgeManagement.IndexStats>('/'+knowledgeId+'/api/v1/Vector/DescribeIndexStats');
+}
+
+export function GenerateGraph(submitDTO: ApiGptManagement.SubmitDTO) {
+  return request.post<string>(
+    '/api/v1/Image/GenerateGraph',
+    submitDTO
+  )
+}
+

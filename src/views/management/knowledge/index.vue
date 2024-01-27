@@ -25,7 +25,7 @@
 					<n-input v-model:value="queryString" placeholder="请输入 名称" size="large" clearable/>
 				</n-input-group>
 			</n-space>
-      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" />
+      <n-data-table :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" :row-props="rowProps"/>
       <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @updateDataTable="getTableData"/>
     </n-card>
   </div>
@@ -36,20 +36,33 @@ import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import {fetchDelUser, fetchKnowledgeList} from '@/service';
+import {fetchDeleteKnowledge, fetchKnowledgeList} from '@/service';
 import { useBoolean, useLoading } from '@/hooks';
 import TableActionModal from './components/table-action-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import ColumnSetting from './components/column-setting.vue';
+import {routeName} from "@/router";
+import {useRouterPush} from "@/composables";
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const queryString = ref<string>('')
-
+const { routerPush } = useRouterPush();
 const tableData = ref<KnowledgeManagement.Knowledge[]>([]);
 function setTableData(data: KnowledgeManagement.Knowledge[]) {
   tableData.value = data;
 }
+function toVectorModule(knowledgeId:number) {
+	routerPush({ name: routeName('management_vector'), query: { knowledgeId:knowledgeId }});
+}
+const rowProps = (row: KnowledgeManagement.Knowledge) => {
+	return {
+		style: "cursor: pointer;",
+		onClick: () => {
+			toVectorModule(row.knowledgeId);
+		},
+	};
+};
 
 async function getTableData() {
   startLoading();
@@ -171,7 +184,7 @@ function handleEditTable(rowId: number) {
 }
 
 async function handleDeleteTable(rowId: number) {
-  const { data } = await fetchDelUser(rowId);
+  const { data } = await fetchDeleteKnowledge(rowId);
   if (data) {
     window.$message?.success('删除成功!');
     const idx = tableData.value.findIndex(item => item.knowledgeId === rowId);

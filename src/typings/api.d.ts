@@ -159,7 +159,6 @@ declare namespace ApiGptManagement {
     userId: number;
     userName: string;
   }
-
   /** key池 管理 */
   interface KeyOption {
     keyId: number;
@@ -242,6 +241,28 @@ declare namespace ApiGptManagement {
     alipayPublicCert: string | null;
     alipayRootCert: string | null;
   }
+  interface ImageRes {
+    imageRecordId: number;
+    prompt: string | null;
+    pranslatePrompt: string | null;
+    imagUrl: string;
+    forwardCount: number;
+    collectCount: number;
+    likeCount: number;
+    createDate: Date;
+    isPublic: boolean | null;
+    isForward: boolean | null;
+    isCollect: boolean | null;
+    islike: boolean | null;
+  }
+  interface SubmitDTO {
+    negativePrompt: string;
+    Prompt: string;
+    model: string;
+    connectionId: any;
+    Count: number;
+    Size: number;
+  }
 }
 /** 支付模块 */
 declare namespace ApiPayManagement {
@@ -259,6 +280,7 @@ declare namespace ApiPayManagement {
     price: number;
     discount: number;
     categoryId: number;
+    categoryName: string;
     stock: number | null;
     isVIP: boolean;
     vipLevel: number | null;
@@ -294,6 +316,10 @@ declare namespace ApiPayManagement {
     isVIP: boolean;
     vipLevel: number;
     vipTime: number;
+  }
+  interface AlipayResponse {
+    out_trade_no: string;
+    qr_code: string;
   }
 }
 /**
@@ -337,5 +363,15 @@ declare namespace ApiKnowledgeManagement {
     score: number;
     values: any;
     metadata: any;
+  }
+  interface IndexStats {
+    namespaces: IndexNamespace[];
+    totalVectorCount: number;
+    indexFullness: number;
+    dimension: number;
+  }
+  interface IndexNamespace {
+    name: string;
+    vectorCount: number;
   }
 }

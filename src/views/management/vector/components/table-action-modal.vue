@@ -2,13 +2,19 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel">
       <n-grid :cols="24" :x-gap="18">
+        <n-form-item-grid-item v-if="props.type != 'edit'" :span="24" label="向量化" path="roleName">
+          <n-switch v-model:value="isEmbedding">
+            <template #checked>向量化</template>
+            <template #unchecked>普通</template>
+          </n-switch>
+        </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" label="NameSpase">
           <n-input v-model:value="formModel.namespace" :disabled="props.type == 'edit'" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" label="ID">
           <n-input v-model:value="formModel.id" :disabled="props.type == 'edit'" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="values">
+        <n-form-item-grid-item v-if="isEmbedding == false" :span="24" label="values">
           <n-input v-model:value="valuesAsString" :disabled="props.type == 'edit'" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" label="metadata">
@@ -26,7 +32,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { fetchUpdateVector, fetchUpsertVector } from '@/service';
+import { fetchEmbaddingUpsert, fetchUpdateVector, fetchUpsertVector } from '@/service';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -57,6 +63,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 const knowledgeId = 3;
+const isEmbedding = ref(false);
 const modalVisible = computed({
   get() {
     return props.visible;
@@ -144,11 +151,21 @@ async function handleSubmit() {
   formModel.metadata = JSON.parse(metadateValue.value);
   const handlers: Record<ModalType, () => void> = {
     add: async () => {
-      const { data } = await fetchUpsertVector(knowledgeId, [formModel], formModel.namespace);
-      if (data) {
-        window.$message?.success('新增成功!');
-        closeModal();
-        emit('updateDataTable');
+      if (!isEmbedding.value) {
+        const { data } = await fetchUpsertVector(knowledgeId, [formModel], formModel.namespace);
+        if (data) {
+          window.$message?.success('新增成功!');
+          closeModal();
+          emit('updateDataTable');
+        }
+      } else {
+        formModel.values = null;
+        const { data } = await fetchEmbaddingUpsert(knowledgeId, [formModel], formModel.namespace);
+        if (data) {
+          window.$message?.success('新增成功!');
+          closeModal();
+          emit('updateDataTable');
+        }
       }
     },
     edit: async () => {

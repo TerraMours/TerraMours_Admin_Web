@@ -9,3 +9,4 @@ index.ts
 text.vue
 management.ts
 /src/views/utils/CopyCodeButton.vue
+/src/service/api/useSignalR.ts

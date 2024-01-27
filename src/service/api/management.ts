@@ -281,15 +281,16 @@ export const fetchKnowledgeList = async () => {
   return adapter(adapterOfFetchKnowledgeList, data);
 };
 
+
 /**
- * 知识库列表
+ * 向量列表
  */
 export const fetchVectorList = async (params:{
   knowledgeId: number,
   id: string | null,
   vector: number[] | null,
   topK: number,
-  namespace: string | null,
+  namespace: string | undefined,
   includeValues: boolean,
   includeMetadata: boolean
 }) => {
@@ -302,4 +303,58 @@ export const fetchVectorList = async (params:{
     includeMetadata:params.includeMetadata
   });
   return adapter(adapterOfFetchVectorList, data);
+};
+/**
+ * 知识库列表
+ */
+export const fetchEmbaddingVectorList = async (params:{
+  knowledgeId: number,
+  filter: any,
+  topK: number,
+  namespace: string | undefined,
+  includeValues: boolean,
+  includeMetadata: boolean
+}) => {
+  const data = await request.post<ApiKnowledgeManagement.Vector | null>(`/${params.knowledgeId}/api/v1/Vector/EmbaddingQuery`, {
+    filter:params.filter,
+    topK:params.topK,
+    namespace:params.namespace,
+    includeValues:params.includeValues,
+    includeMetadata:params.includeMetadata
+  });
+  return adapter(adapterOfFetchVectorList, data);
+};
+/**
+ * 查询我的图片
+ * @param queryString
+ * @param pageIndex
+ * @param pageSize
+ */
+export const MyImageList = async (
+    queryString: string | null,
+    pageIndex: number | undefined,
+    pageSize: number | undefined
+) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.ImageRes> | null>(
+      '/api/v1/Image/MyImageList',
+      { queryString, pageIndex, pageSize }
+  );
+  return data;
+};
+/**
+ * 图片广场
+ * @param queryString
+ * @param pageIndex
+ * @param pageSize
+ */
+export const ShareImageList = async (
+    queryString: string | null,
+    pageIndex: number | undefined,
+    pageSize: number | undefined
+) => {
+  const data = await request.post<ApiGptManagement.PageData<ApiGptManagement.ImageRes> | null>(
+      '/api/v1/Image/ShareImageList',
+      { queryString, pageIndex, pageSize }
+  );
+  return data;
 };
